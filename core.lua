@@ -42,25 +42,38 @@ function TooltipUtils:AddXPBar(tt, unitId)
         local cur = UnitXP(unitId)
         local max = UnitXPMax(unitId)
         local per = cur / max * 100
-        local sw = 10
-        local sh = 16
-        xpBar = CreateFrame("StatusBar", nil, tt)
-        xpBar:SetSize(sw, sh)
-        xpBar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
-        xpBar:SetStatusBarColor(0, 0.5, 1)
+        if xpBar == nil then
+            local sw = 10
+            local sh = 22
+            xpBar = CreateFrame("StatusBar", nil, tt)
+            xpBar:SetSize(sw, sh)
+            xpBar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+            xpBar:SetStatusBarColor(0, 0.5, 1)
+            xpBar:SetPoint("TOPLEFT", tt, "TOPLEFT", 4, 4 + sh)
+            xpBar:SetPoint("TOPRIGHT", tt, "TOPRIGHT", -4, 4 + sh)
+            xpBar.Bg = xpBar:CreateTexture(nil, "BACKGROUND")
+            xpBar.Bg:SetTexture("Interface\\TargetingFrame\\UI-StatusBar")
+            xpBar.Bg:SetAllPoints()
+            xpBar.Bg:SetVertexColor(0.2, 0.2, 0.2, 0.8)
+            xpBar.textCenter = xpBar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+            xpBar.textCenter:SetPoint("CENTER")
+            xpBar.textCenter:SetJustifyH("CENTER")
+            xpBar.textCenter:SetJustifyV("MIDDLE")
+            xpBar.textLeft = xpBar:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+            xpBar.textLeft:SetPoint("LEFT", 4, 0)
+            xpBar.textLeft:SetJustifyH("LEFT")
+            xpBar.textLeft:SetJustifyV("MIDDLE")
+            xpBar.textRight = xpBar:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+            xpBar.textRight:SetPoint("RIGHT", -4, 0)
+            xpBar.textRight:SetJustifyH("RIGHT")
+            xpBar.textRight:SetJustifyV("MIDDLE")
+        end
+
         xpBar:SetMinMaxValues(0, max)
         xpBar:SetValue(cur)
-        xpBar:SetPoint("TOPLEFT", tt, "TOPLEFT", 4, 4 + sh)
-        xpBar:SetPoint("TOPRIGHT", tt, "TOPRIGHT", -4, 4 + sh)
-        local xpBarBg = xpBar:CreateTexture(nil, "BACKGROUND")
-        xpBarBg:SetTexture("Interface\\TargetingFrame\\UI-StatusBar")
-        xpBarBg:SetAllPoints()
-        xpBarBg:SetVertexColor(0.2, 0.2, 0.2, 0.8)
-        local xpBarText = xpBar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-        xpBarText:SetPoint("CENTER")
-        xpBarText:SetJustifyH("CENTER")
-        xpBarText:SetJustifyV("MIDDLE")
-        xpBarText:SetText(string.format("%s: %0.2f%%", XP, per))
+        xpBar.textCenter:SetText(string.format("%s: %0.2f%%", XP, per))
+        xpBar.textLeft:SetText(AbbreviateNumbers(cur, true))
+        xpBar.textRight:SetText(AbbreviateNumbers(max, true))
     end
 end
 
@@ -222,7 +235,14 @@ function TooltipUtils:OnTooltipSetUnit(tt, ...)
     end
 
     local _, unitId = tt:GetUnit()
-    if unitId == nil then return end
+    if unitId == nil then
+        if xpBar then
+            xpBar:Hide()
+        end
+
+        return
+    end
+
     TooltipUtils:PlyTab(unitId)
     if TOUT["SHOWGUID"] then
         TooltipUtils:AddDoubleLine(tt, "GUID", UnitGUID(unitId))
