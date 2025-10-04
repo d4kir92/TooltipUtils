@@ -1,0 +1,15 @@
+-- frFR
+local _, TooltipUtils = ...
+TooltipUtils:AddTrans("frFR", "LID_GENERAL", "General")
+TooltipUtils:AddTrans("frFR", "LID_TOOLTIP", "Tooltip")
+TooltipUtils:AddTrans("frFR", "LID_DEBUG", "DEBUG")
+TooltipUtils:AddTrans("frFR", "LID_SHOWMINIMAPBUTTON", "Show Minimap Button")
+TooltipUtils:AddTrans("frFR", "LID_SHOWPARTYITEMS", "Show Party Items")
+TooltipUtils:AddTrans("frFR", "LID_SHOWPARTYXPBAR", "Show Party XP-Bar")
+TooltipUtils:AddTrans("frFR", "LID_SHOWITEMID", "Show ItemID")
+TooltipUtils:AddTrans("frFR", "LID_SHOWSPELLID", "Show SpellID")
+TooltipUtils:AddTrans("frFR", "LID_SHOWICONID", "Show IconID")
+TooltipUtils:AddTrans("frFR", "LID_SHOWUNITID", "Show UnitID")
+TooltipUtils:AddTrans("frFR", "LID_SHOWGUID", "Show GUID")
+TooltipUtils:AddTrans("frFR", "LID_SHOWMACROID", "Show MacroID")
+TooltipUtils:AddTrans("frFR", "LID_SHOWSLOTID", "Show SlotID")

@@ -1,0 +1,15 @@
+-- esES
+local _, TooltipUtils = ...
+TooltipUtils:AddTrans("esES", "LID_GENERAL", "General")
+TooltipUtils:AddTrans("esES", "LID_TOOLTIP", "Tooltip")
+TooltipUtils:AddTrans("esES", "LID_DEBUG", "DEBUG")
+TooltipUtils:AddTrans("esES", "LID_SHOWMINIMAPBUTTON", "Show Minimap Button")
+TooltipUtils:AddTrans("esES", "LID_SHOWPARTYITEMS", "Show Party Items")
+TooltipUtils:AddTrans("esES", "LID_SHOWPARTYXPBAR", "Show Party XP-Bar")
+TooltipUtils:AddTrans("esES", "LID_SHOWITEMID", "Show ItemID")
+TooltipUtils:AddTrans("esES", "LID_SHOWSPELLID", "Show SpellID")
+TooltipUtils:AddTrans("esES", "LID_SHOWICONID", "Show IconID")
+TooltipUtils:AddTrans("esES", "LID_SHOWUNITID", "Show UnitID")
+TooltipUtils:AddTrans("esES", "LID_SHOWGUID", "Show GUID")
+TooltipUtils:AddTrans("esES", "LID_SHOWMACROID", "Show MacroID")
+TooltipUtils:AddTrans("esES", "LID_SHOWSLOTID", "Show SlotID")

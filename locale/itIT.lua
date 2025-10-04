@@ -1,0 +1,15 @@
+-- itIT
+local _, TooltipUtils = ...
+TooltipUtils:AddTrans("itIT", "LID_GENERAL", "General")
+TooltipUtils:AddTrans("itIT", "LID_TOOLTIP", "Tooltip")
+TooltipUtils:AddTrans("itIT", "LID_DEBUG", "DEBUG")
+TooltipUtils:AddTrans("itIT", "LID_SHOWMINIMAPBUTTON", "Show Minimap Button")
+TooltipUtils:AddTrans("itIT", "LID_SHOWPARTYITEMS", "Show Party Items")
+TooltipUtils:AddTrans("itIT", "LID_SHOWPARTYXPBAR", "Show Party XP-Bar")
+TooltipUtils:AddTrans("itIT", "LID_SHOWITEMID", "Show ItemID")
+TooltipUtils:AddTrans("itIT", "LID_SHOWSPELLID", "Show SpellID")
+TooltipUtils:AddTrans("itIT", "LID_SHOWICONID", "Show IconID")
+TooltipUtils:AddTrans("itIT", "LID_SHOWUNITID", "Show UnitID")
+TooltipUtils:AddTrans("itIT", "LID_SHOWGUID", "Show GUID")
+TooltipUtils:AddTrans("itIT", "LID_SHOWMACROID", "Show MacroID")
+TooltipUtils:AddTrans("itIT", "LID_SHOWSLOTID", "Show SlotID")

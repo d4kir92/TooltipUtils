@@ -1,0 +1,15 @@
+-- ptBR
+local _, TooltipUtils = ...
+TooltipUtils:AddTrans("ptBR", "LID_GENERAL", "General")
+TooltipUtils:AddTrans("ptBR", "LID_TOOLTIP", "Tooltip")
+TooltipUtils:AddTrans("ptBR", "LID_DEBUG", "DEBUG")
+TooltipUtils:AddTrans("ptBR", "LID_SHOWMINIMAPBUTTON", "Show Minimap Button")
+TooltipUtils:AddTrans("ptBR", "LID_SHOWPARTYITEMS", "Show Party Items")
+TooltipUtils:AddTrans("ptBR", "LID_SHOWPARTYXPBAR", "Show Party XP-Bar")
+TooltipUtils:AddTrans("ptBR", "LID_SHOWITEMID", "Show ItemID")
+TooltipUtils:AddTrans("ptBR", "LID_SHOWSPELLID", "Show SpellID")
+TooltipUtils:AddTrans("ptBR", "LID_SHOWICONID", "Show IconID")
+TooltipUtils:AddTrans("ptBR", "LID_SHOWUNITID", "Show UnitID")
+TooltipUtils:AddTrans("ptBR", "LID_SHOWGUID", "Show GUID")
+TooltipUtils:AddTrans("ptBR", "LID_SHOWMACROID", "Show MacroID")
+TooltipUtils:AddTrans("ptBR", "LID_SHOWSLOTID", "Show SlotID")

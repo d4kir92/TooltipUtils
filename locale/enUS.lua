@@ -1,0 +1,15 @@
+-- enUS English
+local _, TooltipUtils = ...
+TooltipUtils:AddTrans("enUS", "LID_GENERAL", "General")
+TooltipUtils:AddTrans("enUS", "LID_TOOLTIP", "Tooltip")
+TooltipUtils:AddTrans("enUS", "LID_DEBUG", "DEBUG")
+TooltipUtils:AddTrans("enUS", "LID_SHOWMINIMAPBUTTON", "Show Minimap Button")
+TooltipUtils:AddTrans("enUS", "LID_SHOWPARTYITEMS", "Show Party Items")
+TooltipUtils:AddTrans("enUS", "LID_SHOWPARTYXPBAR", "Show Party XP-Bar")
+TooltipUtils:AddTrans("enUS", "LID_SHOWITEMID", "Show ItemID")
+TooltipUtils:AddTrans("enUS", "LID_SHOWSPELLID", "Show SpellID")
+TooltipUtils:AddTrans("enUS", "LID_SHOWICONID", "Show IconID")
+TooltipUtils:AddTrans("enUS", "LID_SHOWUNITID", "Show UnitID")
+TooltipUtils:AddTrans("enUS", "LID_SHOWGUID", "Show GUID")
+TooltipUtils:AddTrans("enUS", "LID_SHOWMACROID", "Show MacroID")
+TooltipUtils:AddTrans("enUS", "LID_SHOWSLOTID", "Show SlotID")

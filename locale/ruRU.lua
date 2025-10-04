@@ -1,0 +1,15 @@
+-- ruRU Russian
+local _, TooltipUtils = ...
+TooltipUtils:AddTrans("ruRU", "LID_GENERAL", "General")
+TooltipUtils:AddTrans("ruRU", "LID_TOOLTIP", "Tooltip")
+TooltipUtils:AddTrans("ruRU", "LID_DEBUG", "DEBUG")
+TooltipUtils:AddTrans("ruRU", "LID_SHOWMINIMAPBUTTON", "Show Minimap Button")
+TooltipUtils:AddTrans("ruRU", "LID_SHOWPARTYITEMS", "Show Party Items")
+TooltipUtils:AddTrans("ruRU", "LID_SHOWPARTYXPBAR", "Show Party XP-Bar")
+TooltipUtils:AddTrans("ruRU", "LID_SHOWITEMID", "Show ItemID")
+TooltipUtils:AddTrans("ruRU", "LID_SHOWSPELLID", "Show SpellID")
+TooltipUtils:AddTrans("ruRU", "LID_SHOWICONID", "Show IconID")
+TooltipUtils:AddTrans("ruRU", "LID_SHOWUNITID", "Show UnitID")
+TooltipUtils:AddTrans("ruRU", "LID_SHOWGUID", "Show GUID")
+TooltipUtils:AddTrans("ruRU", "LID_SHOWMACROID", "Show MacroID")
+TooltipUtils:AddTrans("ruRU", "LID_SHOWSLOTID", "Show SlotID")

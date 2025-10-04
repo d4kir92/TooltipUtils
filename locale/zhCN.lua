@@ -1,0 +1,15 @@
+-- zhCN
+local _, TooltipUtils = ...
+TooltipUtils:AddTrans("zhCN", "LID_GENERAL", "General")
+TooltipUtils:AddTrans("zhCN", "LID_TOOLTIP", "Tooltip")
+TooltipUtils:AddTrans("zhCN", "LID_DEBUG", "DEBUG")
+TooltipUtils:AddTrans("zhCN", "LID_SHOWMINIMAPBUTTON", "Show Minimap Button")
+TooltipUtils:AddTrans("zhCN", "LID_SHOWPARTYITEMS", "Show Party Items")
+TooltipUtils:AddTrans("zhCN", "LID_SHOWPARTYXPBAR", "Show Party XP-Bar")
+TooltipUtils:AddTrans("zhCN", "LID_SHOWITEMID", "Show ItemID")
+TooltipUtils:AddTrans("zhCN", "LID_SHOWSPELLID", "Show SpellID")
+TooltipUtils:AddTrans("zhCN", "LID_SHOWICONID", "Show IconID")
+TooltipUtils:AddTrans("zhCN", "LID_SHOWUNITID", "Show UnitID")
+TooltipUtils:AddTrans("zhCN", "LID_SHOWGUID", "Show GUID")
+TooltipUtils:AddTrans("zhCN", "LID_SHOWMACROID", "Show MacroID")
+TooltipUtils:AddTrans("zhCN", "LID_SHOWSLOTID", "Show SlotID")

@@ -1,0 +1,15 @@
+-- deDE German Deutsch
+local _, TooltipUtils = ...
+TooltipUtils:AddTrans("deDE", "LID_GENERAL", "Allgemein")
+TooltipUtils:AddTrans("deDE", "LID_TOOLTIP", "Tooltip")
+TooltipUtils:AddTrans("deDE", "LID_DEBUG", "DEBUG")
+TooltipUtils:AddTrans("deDE", "LID_SHOWMINIMAPBUTTON", "Minimapknopf anzeigen")
+TooltipUtils:AddTrans("deDE", "LID_SHOWPARTYITEMS", "Gruppen Gegenstände anzeigen")
+TooltipUtils:AddTrans("deDE", "LID_SHOWPARTYXPBAR", "Gruppen XP-Bar anzeigen")
+TooltipUtils:AddTrans("deDE", "LID_SHOWITEMID", "ItemID anzeigen")
+TooltipUtils:AddTrans("deDE", "LID_SHOWSPELLID", "SpellID anzeigen")
+TooltipUtils:AddTrans("deDE", "LID_SHOWICONID", "IconID anzeigen")
+TooltipUtils:AddTrans("deDE", "LID_SHOWUNITID", "UnitID anzeigen")
+TooltipUtils:AddTrans("deDE", "LID_SHOWGUID", "GUID anzeigen")
+TooltipUtils:AddTrans("deDE", "LID_SHOWMACROID", "MacroID anzeigen")
+TooltipUtils:AddTrans("deDE", "LID_SHOWSLOTID", "SlotID anzeigen")
