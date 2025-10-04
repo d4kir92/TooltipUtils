@@ -27,12 +27,13 @@ function TooltipUtils:PlyTab(unitId)
     local guid = UnitGUID(unitId)
     if guid == nil then return false end
     if string.find(guid, "Player", 1, true) == nil then return false end
-    if UnitInParty(unitId) == false then return false end
+    if unitId ~= "player" and UnitInParty(unitId) == false then return false end
     TOUT["units"][guid] = TOUT["units"][guid] or {}
 
     return true
 end
 
+local xpBar = nil
 function TooltipUtils:AddXPBar(tt, unitId)
     if TooltipUtils:PlyTab(unitId) then
         local guid = UnitGUID(unitId)
@@ -43,7 +44,7 @@ function TooltipUtils:AddXPBar(tt, unitId)
         local per = cur / max * 100
         local sw = 10
         local sh = 16
-        local xpBar = CreateFrame("StatusBar", nil, tt)
+        xpBar = CreateFrame("StatusBar", nil, tt)
         xpBar:SetSize(sw, sh)
         xpBar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
         xpBar:SetStatusBarColor(0, 0.5, 1)
@@ -227,7 +228,7 @@ function TooltipUtils:OnTooltipSetUnit(tt, ...)
         TooltipUtils:AddDoubleLine(tt, "GUID", UnitGUID(unitId))
     end
 
-    if UnitExists("player") and TooltipUtils:PlyTab("player") then
+    if unitId and unitId == "player" and UnitExists("player") and TooltipUtils:PlyTab("player") then
         TooltipUtils:AddXPBar(tt, "player")
 
         return
@@ -240,6 +241,10 @@ function TooltipUtils:OnTooltipSetUnit(tt, ...)
 
             return
         end
+    end
+
+    if xpBar then
+        xpBar:Hide()
     end
 end
 
