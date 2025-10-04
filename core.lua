@@ -74,6 +74,7 @@ function TooltipUtils:AddXPBar(tt, unitId)
         xpBar.textCenter:SetText(string.format("%s: %0.2f%%", XP, per))
         xpBar.textLeft:SetText(AbbreviateNumbers(cur, true))
         xpBar.textRight:SetText(AbbreviateNumbers(max, true))
+        xpBar:Show()
     end
 end
 
@@ -173,7 +174,7 @@ function TooltipUtils:OnTooltipSetItem(tt, ...)
             end
 
             if tt == GameTooltip then
-                if IsShiftKeyDown() then
+                if IsShiftKeyDown() and TOUT["SHOWPARTYITEMS"] then
                     for i = 1, 4 do
                         local partyUnit = "party" .. i
                         if DEBUG then
@@ -246,6 +247,12 @@ function TooltipUtils:OnTooltipSetUnit(tt, ...)
     TooltipUtils:PlyTab(unitId)
     if TOUT["SHOWGUID"] then
         TooltipUtils:AddDoubleLine(tt, "GUID", UnitGUID(unitId))
+    end
+
+    if TOUT["SHOWPARTYXPBAR"] == false and xpBar then
+        xpBar:Hide()
+
+        return
     end
 
     if unitId and unitId == "player" and UnitExists("player") and TooltipUtils:PlyTab("player") then
