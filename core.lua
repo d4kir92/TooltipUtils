@@ -97,6 +97,12 @@ function TooltipUtils:PlyTab(unitId)
     return true
 end
 
+function TooltipUtils:ItemLinkToItemString(itemLink)
+    local pattern = "|H(item:.-)|h"
+
+    return itemLink:match(pattern)
+end
+
 local xpBar = nil
 function TooltipUtils:AddXPBar(tt, unitId)
     if TooltipUtils:PlyTab(unitId) then
@@ -389,7 +395,9 @@ local function OnTooltipSet(tt, ...)
 end
 
 function TooltipUtils:SendAllSlots()
-    TooltipUtils:QueueMsg("units/slots", "all", table.concat(TOUT["slots"], ":"), "PARTY")
+    for i = 0, 23 do
+        TooltipUtils:QueueMsg("units/slots", i, TOUT["slots"][slot], "PARTY")
+    end
 end
 
 function TooltipUtils:Init()
@@ -408,14 +416,9 @@ function TooltipUtils:Init()
     for i = 0, 23 do
         local itemLink = GetInventoryItemLink("player", i)
         if itemLink then
-            local ItemID = GetItemInfoFromHyperlink(itemLink)
-            if ItemID then
-                TOUT["units"][UnitGUID("player")]["slots"][i] = ItemID
-                TOUT["slots"][i] = ItemID
-            else
-                TOUT["units"][UnitGUID("player")]["slots"][i] = ""
-                TOUT["slots"][i] = ""
-            end
+            itemLink = TooltipUtils:ItemLinkToItemString(itemLink)
+            TOUT["units"][UnitGUID("player")]["slots"][i] = itemLink
+            TOUT["slots"][i] = itemLink
         else
             TOUT["units"][UnitGUID("player")]["slots"][i] = ""
             TOUT["slots"][i] = ""
@@ -481,14 +484,9 @@ function TooltipUtils:Init()
             TOUT["units"][UnitGUID("player")]["slots"] = TOUT["units"][UnitGUID("player")]["slots"] or {}
             local itemLink = GetInventoryItemLink("player", slot)
             if itemLink then
-                local ItemID = GetItemInfoFromHyperlink(itemLink)
-                if ItemID then
-                    TOUT["units"][UnitGUID("player")]["slots"][slot] = ItemID
-                    TOUT["slots"][slot] = ItemID
-                else
-                    TOUT["units"][UnitGUID("player")]["slots"][slot] = ""
-                    TOUT["slots"][slot] = ""
-                end
+                itemLink = TooltipUtils:ItemLinkToItemString(itemLink)
+                TOUT["units"][UnitGUID("player")]["slots"][slot] = itemLink
+                TOUT["slots"][slot] = itemLink
             else
                 TOUT["units"][UnitGUID("player")]["slots"][slot] = ""
                 TOUT["slots"][slot] = ""
@@ -527,13 +525,7 @@ function TooltipUtils:Init()
                     if typ == "units" then
                         TOUT["units"][guid][key] = value
                     elseif typ == "units/slots" then
-                        if key == "all" then
-                            local vals = {strsplit(":", value)}
-                            for x, val in pairs(vals) do
-                                TOUT["units"][guid]["slots"] = TOUT["units"][guid]["slots"] or {}
-                                TOUT["units"][guid]["slots"][tonumber(x)] = tonumber(val)
-                            end
-                        else
+                        if key ~= "all" then
                             TOUT["units"][guid]["slots"] = TOUT["units"][guid]["slots"] or {}
                             TOUT["units"][guid]["slots"][tonumber(key)] = tonumber(value)
                         end
