@@ -1,6 +1,30 @@
 local _, TooltipUtils = ...
 local DEBUG = false
 local tooltips = {GameTooltip, ItemRefTooltip, WhatevahTooltip, ItemRefShoppingTooltip1, ItemRefShoppingTooltip2, ShoppingTooltip1, ShoppingTooltip2}
+local invToSlot = {}
+invToSlot["INVTYPE_HEAD"] = 1
+invToSlot["INVTYPE_NECK"] = 2
+invToSlot["INVTYPE_SHOULDER"] = 3
+invToSlot["INVTYPE_BODY"] = 4
+invToSlot["INVTYPE_CHEST"] = 5
+invToSlot["INVTYPE_ROBE"] = 5
+invToSlot["INVTYPE_WAIST"] = 6
+invToSlot["INVTYPE_LEGS"] = 7
+invToSlot["INVTYPE_FEET"] = 8
+invToSlot["INVTYPE_WRIST"] = 9
+invToSlot["INVTYPE_HAND"] = 10
+invToSlot["INVTYPE_FINGER"] = 11
+invToSlot["INVTYPE_TRINKET"] = 13
+invToSlot["INVTYPE_CLOAK"] = 15
+invToSlot["INVTYPE_WEAPON"] = 16
+invToSlot["INVTYPE_2HWEAPON"] = 16
+invToSlot["INVTYPE_HOLDABLE"] = 16
+invToSlot["INVTYPE_RANGED"] = 18
+invToSlot["INVTYPE_RANGEDRIGHT"] = 18
+invToSlot["INVTYPE_TABARD"] = 19
+invToSlot["INVTYPE_NON_EQUIP_IGNORE"] = false
+invToSlot["INVTYPE_BAG"] = false
+local missingOnce = {}
 local msgPrefix = "TOTUD4"
 function TooltipUtils:AddDoubleLine(tt, textLeft, textRight, noIcon)
     if noIcon then
@@ -95,36 +119,52 @@ function TooltipUtils:GetItemTooltipText(itemLink)
 end
 
 local comparers = {}
-function TooltipUtils:AddComparer(i, itemLink, unitId)
-    local parent = ShoppingTooltip1
-    if i > 1 then
-        parent = comparers[i - 1]
+local comparers2 = {}
+function TooltipUtils:AddComparer(tab, i, itemLink, unitId)
+    if itemLink == nil then return end
+    local parent = GameTooltip
+    if GameTooltip:GetLeft() and ShoppingTooltip1:GetLeft() and GameTooltip:GetLeft() < ShoppingTooltip1:GetLeft() then
+        parent = ShoppingTooltip1
     end
 
-    if comparers[i] == nil then
-        comparers[i] = CreateFrame("GameTooltip", "Comparer" .. i, GameTooltip:GetParent(), "GameTooltipTemplate")
+    if i > 1 then
+        parent = tab[i - 1]
+    end
+
+    if tab[i] == nil then
+        local name = "Comparer" .. i
+        if tab == comparers2 then
+            name = name .. "_2"
+        end
+
+        tab[i] = CreateFrame("GameTooltip", name, GameTooltip:GetParent(), "GameTooltipTemplate")
+        local comparer = tab[i]
         hooksecurefunc(
-            ShoppingTooltip1,
+            GameTooltip,
             "Hide",
             function()
-                comparers[i]:Hide()
+                comparer:Hide()
             end
         )
     end
 
-    comparers[i]:SetOwner(parent, "ANCHOR_NONE")
-    comparers[i]:ClearAllPoints()
+    tab[i]:SetOwner(parent, "ANCHOR_NONE")
+    tab[i]:ClearAllPoints()
     if i == 1 then
-        comparers[i]:SetPoint("TOPLEFT", parent, "TOPRIGHT", 10, 0)
+        if tab == comparers2 then
+            tab[i]:SetPoint("BOTTOMLEFT", parent, "TOPRIGHT", 10, 0)
+        else
+            tab[i]:SetPoint("TOPLEFT", parent, "TOPRIGHT", 10, 0)
+        end
     else
-        comparers[i]:SetPoint("TOPLEFT", parent, "TOPRIGHT", 0, 0)
+        tab[i]:SetPoint("TOPLEFT", parent, "TOPRIGHT", 0, 0)
     end
 
-    comparers[i]:SetScale(GameTooltip:GetScale())
-    comparers[i]:SetHyperlink(itemLink)
-    comparers[i]:AddLine("   ")
-    comparers[i]:AddDoubleLine(COMMUNITY_MEMBER_ROLE_NAME_OWNER or "OWNER", UnitName(unitId))
-    comparers[i]:Show()
+    tab[i]:SetScale(GameTooltip:GetScale())
+    tab[i]:SetHyperlink(itemLink)
+    tab[i]:AddLine("   ")
+    tab[i]:AddDoubleLine(COMMUNITY_MEMBER_ROLE_NAME_OWNER or "OWNER", UnitName(unitId))
+    tab[i]:Show()
 end
 
 function TooltipUtils:OnTooltipSetItem(tt, ...)
@@ -161,7 +201,7 @@ function TooltipUtils:OnTooltipSetItem(tt, ...)
                 TooltipUtils:AddDoubleLine(tt, "SpellID", SpellID)
             end
 
-            local slotId
+            local slotId = nil
             for i = INVSLOT_FIRST_EQUIPPED, INVSLOT_LAST_EQUIPPED do
                 if GetInventoryItemLink("player", i) == itemLink then
                     slotId = i
@@ -173,6 +213,33 @@ function TooltipUtils:OnTooltipSetItem(tt, ...)
                 TooltipUtils:AddDoubleLine(tt, "SlotId", slotId)
             end
 
+            local equipmentSlotName = select(9, C_Item.GetItemInfo(itemLink))
+            if slotId == nil and equipmentSlotName then
+                if invToSlot[equipmentSlotName] == nil then
+                    if missingOnce[equipmentSlotName] == nil then
+                        missingOnce[equipmentSlotName] = true
+                        TooltipUtils:INFO("MISSING INVTYPE [" .. equipmentSlotName .. "]")
+                    end
+                else
+                    slotId = invToSlot[equipmentSlotName]
+                end
+            end
+
+            local slotId2 = nil
+            if slotId == 11 then
+                slotId2 = 12
+            elseif slotId == 12 then
+                slotId2 = 11
+            elseif slotId == 13 then
+                slotId2 = 14
+            elseif slotId == 14 then
+                slotId2 = 13
+            elseif slotId == 16 then
+                slotId2 = 17
+            elseif slotId == 17 then
+                slotId2 = 16
+            end
+
             if tt == GameTooltip then
                 if IsShiftKeyDown() and TOUT["SHOWPARTYITEMS"] then
                     for i = 1, 4 do
@@ -181,16 +248,31 @@ function TooltipUtils:OnTooltipSetItem(tt, ...)
                             partyUnit = "player"
                         end
 
-                        if UnitExists(partyUnit) then
+                        if UnitExists(partyUnit) and TOUT["units"][UnitGUID(partyUnit)] then
                             local slots = TOUT["units"][UnitGUID(partyUnit)]["slots"]
-                            if slots and itemLink and slots[slotId] then
-                                local slotLink = select(2, C_Item.GetItemInfo(slots[slotId]))
-                                TooltipUtils:AddComparer(i, slotLink, partyUnit)
+                            if slots and itemLink then
+                                if slotId and slots[slotId] then
+                                    local slotLink = select(2, C_Item.GetItemInfo(slots[slotId]))
+                                    if slotLink then
+                                        TooltipUtils:AddComparer(comparers, i, slotLink, partyUnit)
+                                    end
+                                end
+
+                                if slotId2 and slots[slotId2] then
+                                    local slotLink = select(2, C_Item.GetItemInfo(slots[slotId2]))
+                                    if slotLink then
+                                        TooltipUtils:AddComparer(comparers2, i, slotLink, partyUnit)
+                                    end
+                                end
                             end
                         end
                     end
                 else
                     for i, v in pairs(comparers) do
+                        v:Hide()
+                    end
+
+                    for i, v in pairs(comparers2) do
                         v:Hide()
                     end
                 end
@@ -289,6 +371,8 @@ function TooltipUtils:Init()
     TOUT = TOUT or {}
     TOUT["slots"] = TOUT["slots"] or {}
     TOUT["units"] = TOUT["units"] or {}
+    TOUT["units"][UnitGUID("player")] = TOUT["units"][UnitGUID("player")] or {}
+    TOUT["units"][UnitGUID("player")]["slots"] = TOUT["units"][UnitGUID("player")]["slots"] or {}
     local successfulRequest = C_ChatInfo.RegisterAddonMessagePrefix(msgPrefix)
     if not successfulRequest then
         TooltipUtils:MSG("[Init] PREFIX FAILED TO ADD")
@@ -301,11 +385,14 @@ function TooltipUtils:Init()
         if itemLink then
             local ItemID = GetItemInfoFromHyperlink(itemLink)
             if ItemID then
+                TOUT["units"][UnitGUID("player")]["slots"][i] = ItemID
                 TOUT["slots"][i] = ItemID
             else
+                TOUT["units"][UnitGUID("player")]["slots"][i] = ""
                 TOUT["slots"][i] = ""
             end
         else
+            TOUT["units"][UnitGUID("player")]["slots"][i] = ""
             TOUT["slots"][i] = ""
         end
     end
@@ -362,16 +449,24 @@ function TooltipUtils:Init()
     TooltipUtils:OnEvent(
         equip,
         function(sel, event, slot, empty)
+            TOUT = TOUT or {}
+            TOUT["slots"] = TOUT["slots"] or {}
+            TOUT["units"] = TOUT["units"] or {}
+            TOUT["units"][UnitGUID("player")] = TOUT["units"][UnitGUID("player")] or {}
+            TOUT["units"][UnitGUID("player")]["slots"] = TOUT["units"][UnitGUID("player")]["slots"] or {}
             local itemLink = GetInventoryItemLink("player", slot)
             if itemLink then
                 local ItemID = GetItemInfoFromHyperlink(itemLink)
                 if ItemID then
+                    TOUT["units"][UnitGUID("player")]["slots"][slot] = ItemID
                     TOUT["slots"][slot] = ItemID
                 else
-                    TOUT["slots"][slot] = nil
+                    TOUT["units"][UnitGUID("player")]["slots"][slot] = ""
+                    TOUT["slots"][slot] = ""
                 end
             else
-                TOUT["slots"][slot] = nil
+                TOUT["units"][UnitGUID("player")]["slots"][slot] = ""
+                TOUT["slots"][slot] = ""
             end
 
             if IsInGroup() then
