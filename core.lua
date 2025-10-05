@@ -29,6 +29,7 @@ invToSlot["INVTYPE_TABARD"] = 19
 invToSlot["INVTYPE_NON_EQUIP_IGNORE"] = false
 invToSlot["INVTYPE_BAG"] = false
 local missingOnce = {}
+local queue = {}
 local msgPrefix = "TOTUD4"
 function TooltipUtils:AddDoubleLine(tt, textLeft, textRight, noIcon)
     if noIcon then
@@ -42,12 +43,47 @@ function TooltipUtils:SendMsg(typ, key, value, chatType, target)
     local message = typ .. ";" .. key .. ";" .. (value or "")
     if DEBUG then
         chatType = "SAY"
-        print("[DEBUG]", message, chatType)
+        TooltipUtils:DEB("SendMsg", message, chatType)
     end
 
     local success = C_ChatInfo.SendAddonMessage(msgPrefix, message, chatType, target)
     if not success then
         TooltipUtils:INFO("SendMsg FAILED", chatType, message)
+    end
+
+    return success
+end
+
+function TooltipUtils:QueueMsg(typ, key, value, chatType, target)
+    tinsert(queue, {typ, key, value, chatType, target})
+end
+
+function TooltipUtils:QueueThink(from)
+    if #queue > 0 then
+        local msgData = queue[1]
+        if TooltipUtils:SendMsg(msgData[1], msgData[2], msgData[3], msgData[4], msgData[5]) then
+            tremove(queue, 1)
+            TooltipUtils:After(
+                0.9,
+                function()
+                    TooltipUtils:QueueThink("Success")
+                end, "QueueSuccess"
+            )
+        else
+            TooltipUtils:After(
+                1.8,
+                function()
+                    TooltipUtils:QueueThink("Failed")
+                end, "QueueFailed"
+            )
+        end
+    else
+        TooltipUtils:After(
+            1.3,
+            function()
+                TooltipUtils:QueueThink("AFK")
+            end, "QueueAFK"
+        )
     end
 end
 
@@ -353,7 +389,7 @@ local function OnTooltipSet(tt, ...)
 end
 
 function TooltipUtils:SendAllSlots()
-    TooltipUtils:SendMsg("units/slots", "all", table.concat(TOUT["slots"], ":"), "PARTY")
+    TooltipUtils:QueueMsg("units/slots", "all", table.concat(TOUT["slots"], ":"), "PARTY")
 end
 
 function TooltipUtils:Init()
@@ -459,7 +495,7 @@ function TooltipUtils:Init()
             end
 
             if IsInGroup() then
-                TooltipUtils:SendMsg("units/slots", slot, TOUT["slots"][slot], "PARTY")
+                TooltipUtils:QueueMsg("units/slots", slot, TOUT["slots"][slot], "PARTY")
             end
         end, "equip"
     )
@@ -483,15 +519,13 @@ function TooltipUtils:Init()
                 if guid then
                     local typ, key, value = strsplit(";", message)
                     if DEBUG then
-                        print("[DEBUG] guid", guid, "typ", typ, "key", key, "value", value)
+                        TooltipUtils:DEB("RECEIVE", "guid", guid, "typ", typ, "key", key, "value", value)
                     end
 
                     TOUT["units"] = TOUT["units"] or {}
                     TOUT["units"][guid] = TOUT["units"][guid] or {}
-                    if typ == "curxp" then
-                        TOUT["units"][guid]["curxp"] = value
-                    elseif typ == "maxxp" then
-                        TOUT["units"][guid]["maxxp"] = value
+                    if typ == "units" then
+                        TOUT["units"][guid][key] = value
                     elseif typ == "units/slots" then
                         if key == "all" then
                             local vals = {strsplit(":", value)}
@@ -515,21 +549,23 @@ function TooltipUtils:Init()
     TooltipUtils:OnEvent(
         xpgain,
         function(sel, event, ...)
-            TooltipUtils:SendMsg("units", "curxp", UnitXP("player"), "PARTY")
             if maxxp ~= UnitXPMax("player") then
                 maxxp = UnitXPMax("player")
-                TooltipUtils:SendMsg("units", "maxxp", UnitXPMax("player"), "PARTY")
+                TooltipUtils:QueueMsg("units", "maxxp", UnitXPMax("player"), "PARTY")
             end
+
+            TooltipUtils:QueueMsg("units", "curxp", UnitXP("player"), "PARTY")
         end, "xpgain"
     )
 
     TooltipUtils:After(
         2,
         function()
-            if UnitInParty(unitId) == false then return false end
+            if not DEBUG and UnitInParty(unitId) == false then return false end
+            TooltipUtils:QueueMsg("units", "maxxp", UnitXPMax("player"), "PARTY")
+            TooltipUtils:QueueMsg("units", "curxp", UnitXP("player"), "PARTY")
             TooltipUtils:SendAllSlots()
-            TooltipUtils:SendMsg("units", "curxp", UnitXP("player"), "PARTY")
-            TooltipUtils:SendMsg("units", "maxxp", UnitXPMax("player"), "PARTY")
+            TooltipUtils:QueueThink("Init")
         end, "INIT"
     )
 end
