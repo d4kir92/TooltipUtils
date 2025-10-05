@@ -167,22 +167,15 @@ function TooltipUtils:AddComparer(tab, i, itemLink, unitId)
     tab[i]:Show()
 end
 
-function TooltipUtils:OnTooltipSetItem(tt, ...)
+function TooltipUtils:OnTooltipSetItem(tt, data)
     if tt == nil then return end
-    if tt.GetID == nil then
-        TooltipUtils:MSG("[OnTooltipSetItem] GetID not available")
-
-        return
+    local itemLink = nil
+    if data and data.id then
+        itemLink = select(2, TooltipUtils:GetItemInfo(data.id))
+    elseif tt.GetItem then
+        itemLink = select(2, tt:GetItem())
     end
 
-    if tt.GetItem == nil then
-        TooltipUtils:MSG("[OnTooltipSetItem] GetItem not available")
-
-        return
-    end
-
-    local item, link = tt:GetItem()
-    local itemLink = link or item
     if itemLink then
         local ItemLink = select(2, C_Item.GetItemInfo(itemLink)) or itemLink
         if ItemLink then
@@ -281,21 +274,15 @@ function TooltipUtils:OnTooltipSetItem(tt, ...)
     end
 end
 
-function TooltipUtils:OnTooltipSetSpell(tt, ...)
+function TooltipUtils:OnTooltipSetSpell(tt, data)
     if tt == nil then return end
-    if tt.GetID == nil then
-        TooltipUtils:MSG("[OnTooltipSetSpell] GetID not available")
-
-        return
+    local spellID = nil
+    if data and data.id then
+        spellID = data.id
+    elseif tt.GetSpell then
+        spellID = select(2, tt:GetSpell())
     end
 
-    if tt.GetSpell == nil then
-        TooltipUtils:MSG("[OnTooltipSetSpell] GetSpell not available")
-
-        return
-    end
-
-    local spellID = select(2, tt:GetSpell())
     if spellID then
         local IconID = select(3, TooltipUtils:GetSpellInfo(spellID))
         if IconID and TOUT["SHOWICONID"] then
@@ -309,15 +296,13 @@ function TooltipUtils:OnTooltipSetSpell(tt, ...)
     end
 end
 
-function TooltipUtils:OnTooltipSetUnit(tt, ...)
+function TooltipUtils:OnTooltipSetUnit(tt, data)
     if tt == nil then return end
-    if tt.GetUnit == nil then
-        TooltipUtils:MSG("[OnTooltipSetUnit] GetUnit not available")
-
-        return
+    local unitId = nil
+    if tt.GetUnit then
+        unitId = select(2, tt:GetUnit())
     end
 
-    local _, unitId = tt:GetUnit()
     if unitId == nil then
         if xpBar then
             xpBar:Hide()
@@ -357,7 +342,7 @@ function TooltipUtils:OnTooltipSetUnit(tt, ...)
     end
 end
 
-function TooltipUtils:OnTooltipSet(tt, ...)
+local function OnTooltipSet(tt, ...)
     TooltipUtils:OnTooltipSetItem(tt, ...)
     TooltipUtils:OnTooltipSetSpell(tt, ...)
     TooltipUtils:OnTooltipSetUnit(tt, ...)
@@ -398,30 +383,30 @@ function TooltipUtils:Init()
     end
 
     if TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall then
-        TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, TooltipUtils.OnTooltipSet)
-        TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Spell, TooltipUtils.OnTooltipSet)
-        TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, TooltipUtils.OnTooltipSet)
+        TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnTooltipSet)
+        TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Spell, OnTooltipSet)
+        TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, OnTooltipSet)
     else
         for _, frame in pairs(tooltips) do
             if frame then
                 frame:HookScript(
                     "OnTooltipSetItem",
                     function(tt, ...)
-                        TooltipUtils:OnTooltipSet(tt)
+                        OnTooltipSet(tt, ...)
                     end
                 )
 
                 frame:HookScript(
                     "OnTooltipSetSpell",
                     function(tt, ...)
-                        TooltipUtils:OnTooltipSet(tt)
+                        OnTooltipSet(tt, ...)
                     end
                 )
 
                 frame:HookScript(
                     "OnTooltipSetUnit",
                     function(tt, ...)
-                        TooltipUtils:OnTooltipSet(tt)
+                        OnTooltipSet(tt, ...)
                     end
                 )
 
