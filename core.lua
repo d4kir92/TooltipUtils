@@ -2,6 +2,7 @@ local _, TooltipUtils = ...
 local DEBUG = false
 local tooltips = {GameTooltip, ItemRefTooltip, WhatevahTooltip, ItemRefShoppingTooltip1, ItemRefShoppingTooltip2, ShoppingTooltip1, ShoppingTooltip2}
 local invToSlot = {}
+invToSlot["INVTYPE_AMMO"] = 0
 invToSlot["INVTYPE_HEAD"] = 1
 invToSlot["INVTYPE_NECK"] = 2
 invToSlot["INVTYPE_SHOULDER"] = 3
@@ -16,9 +17,12 @@ invToSlot["INVTYPE_HAND"] = 10
 invToSlot["INVTYPE_FINGER"] = 11
 invToSlot["INVTYPE_TRINKET"] = 13
 invToSlot["INVTYPE_CLOAK"] = 15
+invToSlot["INVTYPE_WEAPONMAINHAND"] = 16
 invToSlot["INVTYPE_WEAPON"] = 16
 invToSlot["INVTYPE_2HWEAPON"] = 16
-invToSlot["INVTYPE_HOLDABLE"] = 16
+invToSlot["INVTYPE_HOLDABLE"] = 17
+invToSlot["INVTYPE_SHIELD"] = 17
+invToSlot["INVTYPE_THROWN"] = 18
 invToSlot["INVTYPE_RANGED"] = 18
 invToSlot["INVTYPE_RANGEDRIGHT"] = 18
 invToSlot["INVTYPE_TABARD"] = 19
@@ -195,14 +199,14 @@ function TooltipUtils:OnTooltipSetItem(tt, data)
             end
 
             local slotId = nil
-            for i = INVSLOT_FIRST_EQUIPPED, INVSLOT_LAST_EQUIPPED do
+            for i = 0, 23 do
                 if GetInventoryItemLink("player", i) == itemLink then
                     slotId = i
                     break
                 end
             end
 
-            if slotId and TOUT["SHOWSLOTID"] then
+            if slotId ~= nil and TOUT["SHOWSLOTID"] then
                 TooltipUtils:AddDoubleLine(tt, "SlotId", slotId)
             end
 
@@ -244,14 +248,14 @@ function TooltipUtils:OnTooltipSetItem(tt, data)
                         if UnitExists(partyUnit) and TOUT["units"][UnitGUID(partyUnit)] then
                             local slots = TOUT["units"][UnitGUID(partyUnit)]["slots"]
                             if slots and itemLink then
-                                if slotId and slots[slotId] then
+                                if slotId ~= nil and slots[slotId] then
                                     local slotLink = select(2, C_Item.GetItemInfo(slots[slotId]))
                                     if slotLink then
                                         TooltipUtils:AddComparer(comparers, i, slotLink, partyUnit)
                                     end
                                 end
 
-                                if slotId2 and slots[slotId2] then
+                                if slotId2 ~= nil and slots[slotId2] then
                                     local slotLink = select(2, C_Item.GetItemInfo(slots[slotId2]))
                                     if slotLink then
                                         TooltipUtils:AddComparer(comparers2, i, slotLink, partyUnit)
