@@ -18,6 +18,7 @@ invToSlot["INVTYPE_FINGER"] = 11
 invToSlot["INVTYPE_TRINKET"] = 13
 invToSlot["INVTYPE_CLOAK"] = 15
 invToSlot["INVTYPE_WEAPONMAINHAND"] = 16
+invToSlot["INVTYPE_WEAPONOFFHAND"] = 16
 invToSlot["INVTYPE_WEAPON"] = 16
 invToSlot["INVTYPE_2HWEAPON"] = 16
 invToSlot["INVTYPE_HOLDABLE"] = 17
@@ -396,7 +397,7 @@ end
 
 function TooltipUtils:SendAllSlots()
     for i = 0, 23 do
-        TooltipUtils:QueueMsg("units/slots", i, TOUT["slots"][slot], "PARTY")
+        TooltipUtils:QueueMsg("units/slots", i, TOUT["slots"][i], "PARTY")
     end
 end
 
@@ -426,30 +427,47 @@ function TooltipUtils:Init()
     end
 
     if TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall then
-        TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnTooltipSet)
-        TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Spell, OnTooltipSet)
-        TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, OnTooltipSet)
+        TooltipDataProcessor.AddTooltipPostCall(
+            Enum.TooltipDataType.Item,
+            function(tt, data)
+                TooltipUtils:OnTooltipSetItem(tt, data)
+            end
+        )
+
+        TooltipDataProcessor.AddTooltipPostCall(
+            Enum.TooltipDataType.Spell,
+            function(tt, data)
+                TooltipUtils:OnTooltipSetSpell(tt, data)
+            end
+        )
+
+        TooltipDataProcessor.AddTooltipPostCall(
+            Enum.TooltipDataType.Unit,
+            function(tt, data)
+                TooltipUtils:OnTooltipSetUnit(tt, data)
+            end
+        )
     else
         for _, frame in pairs(tooltips) do
             if frame then
                 frame:HookScript(
                     "OnTooltipSetItem",
                     function(tt, ...)
-                        OnTooltipSet(tt, ...)
+                        TooltipUtils:OnTooltipSetItem(tt, ...)
                     end
                 )
 
                 frame:HookScript(
                     "OnTooltipSetSpell",
                     function(tt, ...)
-                        OnTooltipSet(tt, ...)
+                        TooltipUtils:OnTooltipSetSpell(tt, ...)
                     end
                 )
 
                 frame:HookScript(
                     "OnTooltipSetUnit",
                     function(tt, ...)
-                        OnTooltipSet(tt, ...)
+                        TooltipUtils:OnTooltipSetUnit(tt, ...)
                     end
                 )
 
