@@ -29,6 +29,7 @@ invToSlot["INVTYPE_RANGEDRIGHT"] = 18
 invToSlot["INVTYPE_TABARD"] = 19
 invToSlot["INVTYPE_NON_EQUIP_IGNORE"] = false
 invToSlot["INVTYPE_BAG"] = false
+invToSlot["INVTYPE_PROFESSION_TOOL"] = false
 local missingOnce = {}
 local queue = {}
 local msgPrefix = "TOTUD4"
@@ -112,6 +113,12 @@ function TooltipUtils:AddXPBar(tt, unitId)
         TOUT["units"][guid]["maxxp"] = 1
         local cur = UnitXP(unitId)
         local max = UnitXPMax(unitId)
+        if max <= 0 then
+            xpBar:Hide()
+
+            return
+        end
+
         local per = cur / max * 100
         if xpBar == nil then
             local sw = 10
