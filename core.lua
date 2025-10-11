@@ -114,7 +114,9 @@ function TooltipUtils:AddXPBar(tt, unitId)
         local cur = UnitXP(unitId)
         local max = UnitXPMax(unitId)
         if max <= 0 then
-            xpBar:Hide()
+            if xpBar then
+                xpBar:Hide()
+            end
 
             return
         end
