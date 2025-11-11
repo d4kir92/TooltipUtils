@@ -152,8 +152,8 @@ function TooltipUtils:AddXPBar(tt, unitId)
         xpBar:SetMinMaxValues(0, max)
         xpBar:SetValue(cur)
         xpBar.textCenter:SetText(string.format("%s: %0.2f%%", XP, per))
-        xpBar.textLeft:SetText(AbbreviateNumbers(cur, true))
-        xpBar.textRight:SetText(AbbreviateNumbers(max, true))
+        xpBar.textLeft:SetText(AbbreviateNumbers(cur))
+        xpBar.textRight:SetText(AbbreviateNumbers(max))
         xpBar:Show()
     end
 end
@@ -401,7 +401,6 @@ end
 local function OnTooltipSet(tt, ...)
     TooltipUtils:OnTooltipSetItem(tt, ...)
     TooltipUtils:OnTooltipSetSpell(tt, ...)
-    TooltipUtils:OnTooltipSetUnit(tt, ...)
 end
 
 function TooltipUtils:SendAllSlots()
