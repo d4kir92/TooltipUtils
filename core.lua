@@ -398,11 +398,6 @@ function TooltipUtils:OnTooltipSetUnit(tt, data)
     end
 end
 
-local function OnTooltipSet(tt, ...)
-    TooltipUtils:OnTooltipSetItem(tt, ...)
-    TooltipUtils:OnTooltipSetSpell(tt, ...)
-end
-
 function TooltipUtils:SendAllSlots()
     for i = 0, 23 do
         TooltipUtils:QueueMsg("units/slots", i, TOUT["slots"][i], "PARTY")
