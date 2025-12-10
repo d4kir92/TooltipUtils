@@ -2,10 +2,10 @@
 ## Interface-BCC: 20504
 ## Interface-Wrath: 30300, 30403
 ## Interface-Cata: 40402
-## Interface-Mists: 50502
-## Interface: 110205, 110207, 120000
+## Interface-Mists: 50503
+## Interface: 110207, 120000
 
-## Version: 0.1.18
+## Version: 0.1.19
 ## Title: T|cff3FC7EBooltip|rU|cff3FC7EBtils|r |T298591:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
 ## Notes: An add-on that allows you to add features to tooltip, such as: xp-bar from party, compare items with party, etc.
 ## Notes-deDE: Ein Add-on, mit dem Sie Funktionen zum Tooltip hinzufügen können, z. B.: ep-bar von deiner gruppe, Gegenstände mit der Gruppe vergleichen

@@ -373,7 +373,9 @@ function TooltipUtils:OnTooltipSetUnit(tt, data)
     end
 
     if TOUT["SHOWPARTYXPBAR"] == false and xpBar then
-        xpBar:Hide()
+        if xpBar then
+            xpBar:Hide()
+        end
 
         return
     end
@@ -456,6 +458,10 @@ function TooltipUtils:Init()
                 frame:HookScript(
                     "OnTooltipSetItem",
                     function(tt, ...)
+                        if xpBar then
+                            xpBar:Hide()
+                        end
+
                         TooltipUtils:OnTooltipSetItem(tt, ...)
                     end
                 )
@@ -463,6 +469,10 @@ function TooltipUtils:Init()
                 frame:HookScript(
                     "OnTooltipSetSpell",
                     function(tt, ...)
+                        if xpBar then
+                            xpBar:Hide()
+                        end
+
                         TooltipUtils:OnTooltipSetSpell(tt, ...)
                     end
                 )
