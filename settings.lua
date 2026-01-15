@@ -6,15 +6,15 @@ TOUTSetup:SetScript(
     function(self, event, ...)
         if event == "PLAYER_LOGIN" then
             TOUT = TOUT or {}
-            TooltipUtils:SetVersion(298591, "0.1.20")
-            TooltipUtils:SetAddonOutput("TooltipUtils", 298591)
+            TooltipUtils:SetVersion(132252, "0.1.21")
+            TooltipUtils:SetAddonOutput("TooltipUtils", 132252)
             TooltipUtils:AddSlash("tu", TooltipUtils.ToggleSettings)
             TooltipUtils:AddSlash("tooltiputils", TooltipUtils.ToggleSettings)
             local mmbtn = nil
             TooltipUtils:CreateMinimapButton(
                 {
                     ["name"] = "TooltipUtils",
-                    ["icon"] = 298591,
+                    ["icon"] = 132252,
                     ["var"] = mmbtn,
                     ["dbtab"] = TOUT,
                     ["vTT"] = {{"T|cff3FC7EBooltip|rU|cff3FC7EBtils|r", "v|cff3FC7EB" .. TooltipUtils:GetVersion()}, {TooltipUtils:Trans("LID_LEFTCLICK"), TooltipUtils:Trans("LID_OPENSETTINGS")}, {TooltipUtils:Trans("LID_RIGHTCLICK"), TooltipUtils:Trans("LID_HIDEMINIMAPBUTTON")}},

@@ -37,7 +37,7 @@ function TooltipUtils:AddDoubleLine(tt, textLeft, textRight, noIcon)
     if noIcon then
         tt:AddDoubleLine(textLeft, textRight)
     else
-        tt:AddDoubleLine("|T298591:16:16:0:0|t " .. textLeft, textRight)
+        tt:AddDoubleLine("|T132252:16:16:0:0|t " .. textLeft, textRight)
     end
 end
 

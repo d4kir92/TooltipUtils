@@ -1,6 +1,6 @@
 ## Interface: 40402
-## Version: 0.1.20
-## Title: T|cff3FC7EBooltip|rU|cff3FC7EBtils|r |T298591:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
+## Version: 0.1.21
+## Title: T|cff3FC7EBooltip|rU|cff3FC7EBtils|r |T132252:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
 ## Notes: An add-on that allows you to add features to tooltip, such as: xp-bar from party, compare items with party, etc.
 ## Notes-deDE: Ein Add-on, mit dem Sie Funktionen zum Tooltip hinzufügen können, z. B.: ep-bar von deiner gruppe, Gegenstände mit der Gruppe vergleichen
 ## Notes-ruRU: Добавляет функции в подсказку, такие как: полоса опыта группы, сравнение предметов группы и т.д...
@@ -12,7 +12,7 @@
 ## SavedVariablesPerCharacter: TOUTPC
 ## X-Curse-Project-ID: 1355651
 ## X-Wago-ID: BNBe7MGx
-## IconTexture: 298591
+## IconTexture: 132252
 
 libs\D4Lib\D4Lib.xml
 
