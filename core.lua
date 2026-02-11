@@ -477,12 +477,14 @@ function TooltipUtils:Init()
                     end
                 )
 
-                frame:HookScript(
-                    "OnTooltipSetUnit",
-                    function(tt, ...)
-                        TooltipUtils:OnTooltipSetUnit(tt, ...)
-                    end
-                )
+                if frame.OnTooltipSetUnit then
+                    frame:HookScript(
+                        "OnTooltipSetUnit",
+                        function(tt, ...)
+                            TooltipUtils:OnTooltipSetUnit(tt, ...)
+                        end
+                    )
+                end
 
                 if frame == GameTooltip then
                     hooksecurefunc(
