@@ -416,11 +416,11 @@ function TooltipUtils:OnTooltipSetUnit(tt, data)
         TooltipUtils:AddDoubleLine(tt, "GUID", UnitGUID(unitId))
     end
 
-    if TOUT["POLYMORPHABLE"] == false then
+    if TOUT["POLYMORPHABLE"] == true then
         TooltipUtils:AddPoly(tt, unitId)
     end
 
-    if TOUT["BANISHABLE"] == false then
+    if TOUT["BANISHABLE"] == true then
         TooltipUtils:AddBanishable(tt, unitId)
     end
 
