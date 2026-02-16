@@ -242,7 +242,7 @@ end
 
 function TooltipUtils:AddPoly(tt, unitId)
     if not UnitCanAttack("player", unitId) then return end
-    TooltipUtils:AddDoubleLine(TooltipUtils:Trans("LID_POLYMORPHABLE"), TooltipUtils:GetSheepStatus(unitId))
+    TooltipUtils:AddDoubleLine(tt, TooltipUtils:Trans("LID_POLYMORPHABLE"), TooltipUtils:GetSheepStatus(unitId), false)
 end
 
 function TooltipUtils:GetBanishableStatus(unit)
@@ -264,7 +264,7 @@ end
 
 function TooltipUtils:AddBanishable(tt, unitId)
     if not UnitCanAttack("player", unitId) then return end
-    TooltipUtils:AddDoubleLine(TooltipUtils:Trans("LID_BANISHABLE"), TooltipUtils:GetBanishableStatus(unitId))
+    TooltipUtils:AddDoubleLine(tt, TooltipUtils:Trans("LID_BANISHABLE"), TooltipUtils:GetBanishableStatus(unitId), false)
 end
 
 function TooltipUtils:OnTooltipSetItem(tt, data)
