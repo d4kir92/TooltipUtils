@@ -223,6 +223,50 @@ function TooltipUtils:AddComparer(tab, i, itemLink, unitId)
     tab[i]:Show()
 end
 
+function TooltipUtils:GetSheepStatus(unit)
+    local _, cType = UnitCreatureType(unit)
+    local classification = UnitClassification(unit)
+    local validTypes = {
+        [1] = true,
+        [7] = true,
+    }
+
+    if classification == "worldboss" then
+        return "|cffff0000" .. IMMUNE .. " (" .. BOSS .. ")|r"
+    elseif validTypes[cType] then
+        return "|cff00ff00" .. YES .. "|r"
+    else
+        return "|cffff0000" .. NO .. "|r"
+    end
+end
+
+function TooltipUtils:AddPoly(tt, unitId)
+    if not UnitCanAttack("player", unitId) then return end
+    TooltipUtils:AddDoubleLine(TooltipUtils:Trans("LID_POLYMORPHABLE"), TooltipUtils:GetSheepStatus(unitId))
+end
+
+function TooltipUtils:GetBanishableStatus(unit)
+    local _, cType = UnitCreatureType(unit)
+    local classification = UnitClassification(unit)
+    local validTypes = {
+        [2] = true,
+        [3] = true,
+    }
+
+    if classification == "worldboss" then
+        return "|cffff0000" .. IMMUNE .. " (" .. BOSS .. ")|r"
+    elseif validTypes[cType] then
+        return "|cff00ff00" .. YES .. "|r"
+    else
+        return "|cffff0000" .. NO .. "|r"
+    end
+end
+
+function TooltipUtils:AddBanishable(tt, unitId)
+    if not UnitCanAttack("player", unitId) then return end
+    TooltipUtils:AddDoubleLine(TooltipUtils:Trans("LID_BANISHABLE"), TooltipUtils:GetBanishableStatus(unitId))
+end
+
 function TooltipUtils:OnTooltipSetItem(tt, data)
     if tt == nil then return end
     local itemLink = nil
@@ -372,6 +416,14 @@ function TooltipUtils:OnTooltipSetUnit(tt, data)
         TooltipUtils:AddDoubleLine(tt, "GUID", UnitGUID(unitId))
     end
 
+    if TOUT["POLYMORPHABLE"] == false then
+        TooltipUtils:AddPoly(tt, unitId)
+    end
+
+    if TOUT["BANISHABLE"] == false then
+        TooltipUtils:AddBanishable(tt, unitId)
+    end
+
     if TOUT["SHOWPARTYXPBAR"] == false and xpBar then
         if xpBar then
             xpBar:Hide()
@@ -431,7 +483,7 @@ function TooltipUtils:Init()
         end
     end
 
-    if TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall then
+    if TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall and TooltipUtils:GetWoWBuild() ~= "TBC" then
         TooltipDataProcessor.AddTooltipPostCall(
             Enum.TooltipDataType.Item,
             function(tt, data)
@@ -455,29 +507,33 @@ function TooltipUtils:Init()
     else
         for _, frame in pairs(tooltips) do
             if frame then
-                frame:HookScript(
-                    "OnTooltipSetItem",
-                    function(tt, ...)
-                        if xpBar then
-                            xpBar:Hide()
+                if frame.HasScript and frame:HasScript("OnTooltipSetItem") then
+                    frame:HookScript(
+                        "OnTooltipSetItem",
+                        function(tt, ...)
+                            if xpBar then
+                                xpBar:Hide()
+                            end
+
+                            TooltipUtils:OnTooltipSetItem(tt, ...)
                         end
+                    )
+                end
 
-                        TooltipUtils:OnTooltipSetItem(tt, ...)
-                    end
-                )
+                if frame.HasScript and frame:HasScript("OnTooltipSetSpell") then
+                    frame:HookScript(
+                        "OnTooltipSetSpell",
+                        function(tt, ...)
+                            if xpBar then
+                                xpBar:Hide()
+                            end
 
-                frame:HookScript(
-                    "OnTooltipSetSpell",
-                    function(tt, ...)
-                        if xpBar then
-                            xpBar:Hide()
+                            TooltipUtils:OnTooltipSetSpell(tt, ...)
                         end
+                    )
+                end
 
-                        TooltipUtils:OnTooltipSetSpell(tt, ...)
-                    end
-                )
-
-                if frame.OnTooltipSetUnit then
+                if frame.HasScript and frame:HasScript("OnTooltipSetUnit") then
                     frame:HookScript(
                         "OnTooltipSetUnit",
                         function(tt, ...)
