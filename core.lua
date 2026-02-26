@@ -89,7 +89,12 @@ function TooltipUtils:QueueThink(from)
     end
 end
 
+function TooltipUtils:IsSafeUnit(unit)
+    return pcall(UnitExists, unit)
+end
+
 function TooltipUtils:PlyTab(unitId)
+    if not TooltipUtils:IsSafeUnit(unitId) then return false end
     local guid = UnitGUID(unitId)
     if guid == nil then return false end
     if string.find(guid, "Player", 1, true) == nil then return false end
@@ -241,6 +246,7 @@ function TooltipUtils:GetSheepStatus(unit)
 end
 
 function TooltipUtils:AddPoly(tt, unitId)
+    if not TooltipUtils:IsSafeUnit(unitId) then return end
     if not UnitCanAttack("player", unitId) then return end
     TooltipUtils:AddDoubleLine(tt, TooltipUtils:Trans("LID_POLYMORPHABLE"), TooltipUtils:GetSheepStatus(unitId), false)
 end
@@ -263,6 +269,7 @@ function TooltipUtils:GetBanishableStatus(unit)
 end
 
 function TooltipUtils:AddBanishable(tt, unitId)
+    if not TooltipUtils:IsSafeUnit(unitId) then return end
     if not UnitCanAttack("player", unitId) then return end
     TooltipUtils:AddDoubleLine(tt, TooltipUtils:Trans("LID_BANISHABLE"), TooltipUtils:GetBanishableStatus(unitId), false)
 end
@@ -432,7 +439,7 @@ function TooltipUtils:OnTooltipSetUnit(tt, data)
         return
     end
 
-    if unitId and unitId == "player" and UnitExists("player") and TooltipUtils:PlyTab("player") then
+    if unitId and TooltipUtils:IsSafeUnit("player") and unitId == "player" and UnitExists("player") and TooltipUtils:PlyTab("player") then
         TooltipUtils:AddXPBar(tt, "player")
 
         return
@@ -440,7 +447,7 @@ function TooltipUtils:OnTooltipSetUnit(tt, data)
 
     for i = 1, 4 do
         local unit = "party" .. i
-        if UnitExists(unit) and UnitGUID(unit) == UnitGUID(unitId) and TooltipUtils:PlyTab(unit) then
+        if TooltipUtils:IsSafeUnit(unit) and TooltipUtils:IsSafeUnit(unitId) and UnitExists(unit) and UnitGUID(unit) == UnitGUID(unitId) and TooltipUtils:PlyTab(unit) then
             TooltipUtils:AddXPBar(tt, unit)
 
             return
