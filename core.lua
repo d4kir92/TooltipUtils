@@ -439,7 +439,7 @@ function TooltipUtils:OnTooltipSetUnit(tt, data)
         return
     end
 
-    if unitId and TooltipUtils:IsSafeUnit("player") and unitId == "player" and UnitExists("player") and TooltipUtils:PlyTab("player") then
+    if unitId and TooltipUtils:IsSafeUnit(unitId) and TooltipUtils:IsSafeUnit("player") and unitId == "player" and UnitExists("player") and TooltipUtils:PlyTab("player") then
         TooltipUtils:AddXPBar(tt, "player")
 
         return
