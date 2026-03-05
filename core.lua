@@ -274,6 +274,21 @@ function TooltipUtils:AddBanishable(tt, unitId)
     TooltipUtils:AddDoubleLine(tt, TooltipUtils:Trans("LID_BANISHABLE"), TooltipUtils:GetBanishableStatus(unitId), false)
 end
 
+function TooltipUtils:GetBonusIDs(itemLink)
+    if not itemLink then return "Kein Item gefunden" end
+    -- Zerlege den Link in seine Einzelteile
+    local parts = {strsplit(":", itemLink)}
+    -- Wir extrahieren alles ab Index 8 bis zum Ende des Tables
+    local resultParts = {}
+    for i = 14, #parts do
+        -- Wir nehmen auch leere Felder ("") mit, um die Struktur zu erhalten
+        table.insert(resultParts, parts[i] == "" and "0" or parts[i])
+    end
+    -- Wir geben die Kette mit Bindestrichen oder Kommas getrennt aus
+
+    return table.concat(resultParts, ":")
+end
+
 function TooltipUtils:OnTooltipSetItem(tt, data)
     if tt == nil then return end
     local itemLink = nil
@@ -299,6 +314,11 @@ function TooltipUtils:OnTooltipSetItem(tt, data)
             local SpellID = select(2, C_Item.GetItemSpell(ItemLink))
             if SpellID and TOUT["SHOWSPELLID"] then
                 TooltipUtils:AddDoubleLine(tt, "SpellID", SpellID)
+            end
+
+            local bonusIDS = TooltipUtils:GetBonusIDs(itemLink)
+            if bonusIDS and TOUT["SHOWBONUSIDS"] then
+                TooltipUtils:AddDoubleLine(tt, "Bonus-IDs", bonusIDS)
             end
 
             local slotId = nil
