@@ -30,6 +30,7 @@ invToSlot["INVTYPE_TABARD"] = 19
 invToSlot["INVTYPE_NON_EQUIP_IGNORE"] = false
 invToSlot["INVTYPE_BAG"] = false
 invToSlot["INVTYPE_PROFESSION_TOOL"] = false
+invToSlot["INVTYPE_PROFESSION_GEAR"] = false
 local missingOnce = {}
 local queue = {}
 local msgPrefix = "TOTUD4"
