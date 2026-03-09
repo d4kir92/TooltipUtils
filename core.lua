@@ -532,6 +532,13 @@ function TooltipUtils:Init()
                 TooltipUtils:OnTooltipSetUnit(tt, data)
             end
         )
+
+        TooltipDataProcessor.AddTooltipPostCall(
+            Enum.TooltipDataType.UnitAura,
+            function(tt, data)
+                TooltipUtils:OnTooltipSetSpell(tt, data)
+            end
+        )
     else
         for _, frame in pairs(tooltips) do
             if frame then
