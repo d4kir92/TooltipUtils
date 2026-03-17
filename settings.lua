@@ -6,7 +6,7 @@ TOUTSetup:SetScript(
     function(self, event, ...)
         if event == "PLAYER_LOGIN" then
             TOUT = TOUT or {}
-            TooltipUtils:SetVersion(132252, "0.1.34")
+            TooltipUtils:SetVersion(132252, "0.1.35")
             TooltipUtils:SetAddonOutput("TooltipUtils", 132252)
             TooltipUtils:AddSlash("tu", TooltipUtils.ToggleSettings)
             TooltipUtils:AddSlash("tooltiputils", TooltipUtils.ToggleSettings)
@@ -17,7 +17,7 @@ TOUTSetup:SetScript(
                     ["icon"] = 132252,
                     ["var"] = mmbtn,
                     ["dbtab"] = TOUT,
-                    ["vTT"] = {{"T|cff3FC7EBooltip|rU|cff3FC7EBtils|r", "v|cff3FC7EB" .. TooltipUtils:GetVersion()}, {TooltipUtils:Trans("LID_LEFTCLICK"), TooltipUtils:Trans("LID_OPENSETTINGS")}, {TooltipUtils:Trans("LID_RIGHTCLICK"), TooltipUtils:Trans("LID_HIDEMINIMAPBUTTON")}},
+                    ["vTT"] = {{"TooltipUtils", "v" .. TooltipUtils:GetVersion()}, {TooltipUtils:Trans("LID_LEFTCLICK"), TooltipUtils:Trans("LID_OPENSETTINGS")}, {TooltipUtils:Trans("LID_RIGHTCLICK"), TooltipUtils:Trans("LID_HIDEMINIMAPBUTTON")}},
                     ["funcL"] = function()
                         TooltipUtils:ToggleSettings()
                     end,
@@ -55,7 +55,7 @@ function TooltipUtils:InitSettings()
             ["pTab"] = {"CENTER"},
             ["sw"] = 520,
             ["sh"] = 520,
-            ["title"] = format("T|cff3FC7EBooltip|rU|cff3FC7EBtils|r v|cff3FC7EB%s", TooltipUtils:GetVersion())
+            ["title"] = format("TooltipUtils v%s", TooltipUtils:GetVersion())
         }
     )
 
