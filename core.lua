@@ -34,6 +34,7 @@ invToSlot["INVTYPE_PROFESSION_GEAR"] = false
 local missingOnce = {}
 local queue = {}
 local msgPrefix = "TOTUD4"
+local lastInspect = 0
 function TooltipUtils:AddDoubleLine(tt, textLeft, textRight, noIcon)
     if noIcon then
         tt:AddDoubleLine(textLeft, textRight)
@@ -455,12 +456,11 @@ function TooltipUtils:OnTooltipSetUnit(tt, data)
     if TOUT["SHOWITEMLEVEL"] and unitId and UnitIsPlayer(unitId) and CanInspect(unitId) and (InspectFrame == nil or not InspectFrame:IsShown()) then
         local guid = UnitGUID(unitId)
         local cachedLevel = TooltipUtils:GetCachedItemLevel(guid)
-        if not cachedLevel then
-            if TooltipUtils:GetInspectCache(guid) == nil then
-                TooltipUtils:SaveToInspectCache(guid)
-                NotifyInspect(unitId)
-            end
-        else
+        if not cachedLevel and TooltipUtils:GetInspectCache(guid) == nil and lastInspect < GetTime() then
+            lastInspect = GetTime() + 2
+            TooltipUtils:SaveToInspectCache(guid)
+            NotifyInspect(unitId)
+        elseif cachedLevel then
             TooltipUtils:AddDoubleLine(tt, "ilvl:", format("%.1f", cachedLevel))
             tt:Show()
         end
@@ -700,26 +700,6 @@ function TooltipUtils:Init()
     )
 end
 
-local function GetInspectILvl(unit)
-    local totalLevel = 0
-    local itemCount = 0
-    local slots = {1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18}
-    for _, slotId in ipairs(slots) do
-        local itemLink = GetInventoryItemLink(unit, slotId)
-        if itemLink then
-            local _, _, _, itemLevel = GetItemInfo(itemLink)
-            if itemLevel and itemLevel > 0 then
-                totalLevel = totalLevel + itemLevel
-                itemCount = itemCount + 1
-            end
-        end
-    end
-
-    if itemCount == 0 then return 0 end
-
-    return totalLevel / itemCount
-end
-
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("INSPECT_READY")
 frame:SetScript(
@@ -739,35 +719,13 @@ frame:SetScript(
                         GameTooltip:Show()
                     end
                 else
-                    local ilevel = GetInspectILvl(unit)
+                    local ilevel = TooltipUtils:GetInspectILvl(unit)
                     if ilevel and ilevel > 0 then
                         TooltipUtils:SaveToItemLevelCache(guid, ilevel)
                         TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%.1f", ilevel))
                         GameTooltip:Show()
                     end
                 end
-            end
-        end
-    end
-)
-
-TooltipDataProcessor.AddTooltipPostCall(
-    Enum.TooltipDataType.Unit,
-    function(tooltip, data)
-        if not TOUT["SHOWITEMLEVEL"] then return end
-        if InspectFrame and InspectFrame:IsShown() then return end
-        local _, unit = tooltip:GetUnit()
-        if unit and UnitIsPlayer(unit) and CanInspect(unit) then
-            local guid = UnitGUID(unit)
-            local cachedLevel = TooltipUtils:GetCachedItemLevel(guid)
-            if not cachedLevel then
-                if TooltipUtils:GetInspectCache(guid) == nil then
-                    TooltipUtils:SaveToInspectCache(guid)
-                    NotifyInspect(unit)
-                end
-            else
-                TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%.1f", cachedLevel))
-                GameTooltip:Show()
             end
         end
     end
