@@ -6,7 +6,7 @@ TOUTSetup:SetScript(
     function(self, event, ...)
         if event == "PLAYER_LOGIN" then
             TOUT = TOUT or {}
-            TooltipUtils:SetVersion(132252, "0.1.35")
+            TooltipUtils:SetVersion(132252, "0.1.36")
             TooltipUtils:SetAddonOutput("TooltipUtils", 132252)
             TooltipUtils:AddSlash("tu", TooltipUtils.ToggleSettings)
             TooltipUtils:AddSlash("tooltiputils", TooltipUtils.ToggleSettings)
@@ -79,6 +79,7 @@ function TooltipUtils:InitSettings()
     )
 
     TooltipUtils:AppendCategory("TOOLTIP")
+    TooltipUtils:AppendCheckbox("SHOWITEMLEVEL", true)
     TooltipUtils:AppendCheckbox("SHOWPARTYITEMS", true)
     TooltipUtils:AppendCheckbox("SHOWPARTYXPBAR", true)
     TooltipUtils:AppendCheckbox("POLYMORPHABLE", true)

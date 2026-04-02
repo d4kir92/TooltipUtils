@@ -1207,14 +1207,25 @@ function D4:DrawDebug(name, callback, fontSize, sw, sh, p1, p2, p3, p4, p5)
     return fDebug
 end
 
-function D4:EasyFind(word)
+function D4:EasyFind(word, exact)
+    word = string.lower(word)
     for i, v in pairs(_G) do
-        if i and type(i) == "string" and string.find(string.lower(i), word) then
-            print("i", i, "v", v)
-        end
+        if exact then
+            if i and type(i) == "string" and string.lower(i) == word then
+                print("i", i, "v", v)
+            end
 
-        if v and type(v) == "string" and string.find(string.lower(v), word) then
-            print("i", i, "v", v)
+            if v and type(v) == "string" and string.lower(v) == word then
+                print("i", i, "v", v)
+            end
+        else
+            if i and type(i) == "string" and string.find(string.lower(i), word) then
+                print("i", i, "v", v)
+            end
+
+            if v and type(v) == "string" and string.find(string.lower(v), word) then
+                print("i", i, "v", v)
+            end
         end
     end
 end
@@ -1393,3 +1404,43 @@ D4:After(
         end
     end, "TBC FIX"
 )
+
+local inspectCache = {}
+local itemLevelCache = {}
+local CACHE_DURATION = 3600
+function D4:GetInspectCache(guid)
+    local data = inspectCache[guid]
+    if data then
+        if GetTime() < data then
+            return data
+        else
+            inspectCache[guid] = nil
+        end
+    end
+
+    return nil
+end
+
+function D4:SaveToInspectCache(guid)
+    inspectCache[guid] = GetTime() + 4
+end
+
+function D4:GetCachedItemLevel(guid)
+    local data = itemLevelCache[guid]
+    if data then
+        if GetTime() < data.expires then
+            return data.ilevel
+        else
+            itemLevelCache[guid] = nil
+        end
+    end
+
+    return nil
+end
+
+function D4:SaveToItemLevelCache(guid, ilevel)
+    itemLevelCache[guid] = {
+        ilevel = ilevel,
+        expires = GetTime() + CACHE_DURATION
+    }
+end
