@@ -703,7 +703,6 @@ end
 local function GetInspectILvl(unit)
     local totalLevel = 0
     local itemCount = 0
-    -- Die relevanten Slots (1 bis 18, ohne Hemd (4) und Tabard (19))
     local slots = {1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18}
     for _, slotId in ipairs(slots) do
         local itemLink = GetInventoryItemLink(unit, slotId)
