@@ -453,7 +453,7 @@ function TooltipUtils:OnTooltipSetUnit(tt, data)
         TooltipUtils:AddBanishable(tt, unitId)
     end
 
-    if TOUT["SHOWITEMLEVEL"] and not InCombatLockdown() and not issecurevariable("UnitExists", unit) and unitId and UnitIsPlayer(unitId) and CanInspect(unitId) and (InspectFrame == nil or not InspectFrame:IsShown()) then
+    if TOUT["SHOWITEMLEVEL"] and unitId and not InCombatLockdown() and pcall(UnitExists, unitId) and UnitIsPlayer(unitId) and CanInspect(unitId) and (InspectFrame == nil or not InspectFrame:IsShown()) then
         local guid = UnitGUID(unitId)
         local cachedLevel = TooltipUtils:GetCachedItemLevel(guid)
         if not cachedLevel and TooltipUtils:GetInspectCache(guid) == nil and lastInspect < GetTime() then
@@ -711,7 +711,7 @@ frame:SetScript(
             if cachedLevel then return end
             local _, unit = GameTooltip:GetUnit()
             if InCombatLockdown() then return end
-            if issecurevariable("UnitExists", unit) then return end
+            if not pcall(UnitExists, unit) then return end
             if unit and UnitExists(unit) and UnitGUID(unit) == guid then
                 if C_PaperDollInfo and C_PaperDollInfo.GetInspectItemLevel then
                     local ilevel = C_PaperDollInfo.GetInspectItemLevel(unit)
