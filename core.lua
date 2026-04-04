@@ -1,5 +1,6 @@
 local _, TooltipUtils = ...
 local DEBUG = false
+local lastInspectGUID = nil
 local tooltips = {GameTooltip, ItemRefTooltip, WhatevahTooltip, ItemRefShoppingTooltip1, ItemRefShoppingTooltip2, ShoppingTooltip1, ShoppingTooltip2}
 local invToSlot = {}
 invToSlot["INVTYPE_AMMO"] = 0
@@ -459,6 +460,7 @@ function TooltipUtils:OnTooltipSetUnit(tt, data)
         if not cachedLevel and TooltipUtils:GetInspectCache(guid) == nil and lastInspect < GetTime() then
             lastInspect = GetTime() + 2
             TooltipUtils:SaveToInspectCache(guid)
+            lastInspectGUID = guid
             NotifyInspect(unitId)
         elseif cachedLevel then
             TooltipUtils:AddDoubleLine(tt, "ilvl:", format("%.1f", cachedLevel))
@@ -705,7 +707,7 @@ frame:RegisterEvent("INSPECT_READY")
 frame:SetScript(
     "OnEvent",
     function(self, event, guid)
-        if event == "INSPECT_READY" then
+        if event == "INSPECT_READY" and lastInspectGUID and guid == lastInspectGUID then
             if not TOUT["SHOWITEMLEVEL"] then return end
             local cachedLevel = TooltipUtils:GetCachedItemLevel(guid)
             if cachedLevel then return end
@@ -719,6 +721,8 @@ frame:SetScript(
                         TooltipUtils:SaveToItemLevelCache(guid, ilevel)
                         TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%.1f", ilevel))
                         GameTooltip:Show()
+                        ClearInspectPlayer()
+                        lastInspectGUID = nil
                     end
                 else
                     local ilevel = TooltipUtils:GetInspectILvl(unit)
@@ -726,6 +730,8 @@ frame:SetScript(
                         TooltipUtils:SaveToItemLevelCache(guid, ilevel)
                         TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%.1f", ilevel))
                         GameTooltip:Show()
+                        ClearInspectPlayer()
+                        lastInspectGUID = nil
                     end
                 end
             end
