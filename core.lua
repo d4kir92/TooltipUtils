@@ -721,7 +721,6 @@ frame:SetScript(
                         TooltipUtils:SaveToItemLevelCache(guid, ilevel)
                         TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%.1f", ilevel))
                         GameTooltip:Show()
-                        ClearInspectPlayer()
                         lastInspectGUID = nil
                     end
                 else
@@ -730,7 +729,6 @@ frame:SetScript(
                         TooltipUtils:SaveToItemLevelCache(guid, ilevel)
                         TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%.1f", ilevel))
                         GameTooltip:Show()
-                        ClearInspectPlayer()
                         lastInspectGUID = nil
                     end
                 end
