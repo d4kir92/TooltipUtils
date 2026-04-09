@@ -121,7 +121,7 @@ function TooltipUtils:AddXPBar(tt, unitId)
         TOUT["units"][guid]["maxxp"] = 1
         local cur = UnitXP(unitId)
         local max = UnitXPMax(unitId)
-        if max <= 0 then
+        if cur == 0 or max <= 0 then
             if xpBar then
                 xpBar:Hide()
             end
@@ -454,10 +454,10 @@ function TooltipUtils:OnTooltipSetUnit(tt, data)
         TooltipUtils:AddBanishable(tt, unitId)
     end
 
-    if TOUT["SHOWITEMLEVEL"] and unitId and not InCombatLockdown() and pcall(UnitExists, unitId) and UnitIsPlayer(unitId) and CanInspect(unitId) and (InspectFrame == nil or not InspectFrame:IsShown()) then
+    if TOUT["SHOWITEMLEVEL"] and unitId and not InCombatLockdown() and pcall(UnitExists, unitId) and UnitIsPlayer(unitId) and CanInspect(unitId) then
         local guid = UnitGUID(unitId)
         local cachedLevel = TooltipUtils:GetCachedItemLevel(guid)
-        if not cachedLevel and TooltipUtils:GetInspectCache(guid) == nil and lastInspect < GetTime() then
+        if not cachedLevel and (InspectFrame == nil or not InspectFrame:IsShown()) and TooltipUtils:GetInspectCache(guid) == nil and lastInspect < GetTime() then
             lastInspect = GetTime() + 2
             TooltipUtils:SaveToInspectCache(guid)
             lastInspectGUID = guid
