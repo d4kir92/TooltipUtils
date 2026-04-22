@@ -429,71 +429,75 @@ end
 function TooltipUtils:OnTooltipSetUnit(tt, data)
     if tt == nil then return end
     local unitId = nil
-    if tt.GetUnit then
-        unitId = select(2, tt:GetUnit())
-    end
+    pcall(
+        function()
+            if tt.GetUnit then
+                unitId = select(2, tt:GetUnit())
+            end
 
-    if unitId == nil then
-        if xpBar then
-            xpBar:Hide()
+            if unitId == nil then
+                if xpBar then
+                    xpBar:Hide()
+                end
+
+                return
+            end
+
+            TooltipUtils:PlyTab(unitId)
+            if TOUT["SHOWGUID"] then
+                TooltipUtils:AddDoubleLine(tt, "GUID", UnitGUID(unitId))
+            end
+
+            if TOUT["POLYMORPHABLE"] == true then
+                TooltipUtils:AddPoly(tt, unitId)
+            end
+
+            if TOUT["BANISHABLE"] == true then
+                TooltipUtils:AddBanishable(tt, unitId)
+            end
+
+            if TOUT["SHOWITEMLEVEL"] and unitId and not InCombatLockdown() and pcall(UnitExists, unitId) and UnitIsPlayer(unitId) and CanInspect(unitId) then
+                local guid = UnitGUID(unitId)
+                local cachedLevel = TooltipUtils:GetCachedItemLevel(guid)
+                if not cachedLevel and (InspectFrame == nil or not InspectFrame:IsShown()) and TooltipUtils:GetInspectCache(guid) == nil and lastInspect < GetTime() then
+                    lastInspect = GetTime() + 2
+                    TooltipUtils:SaveToInspectCache(guid)
+                    lastInspectGUID = guid
+                    NotifyInspect(unitId)
+                elseif cachedLevel then
+                    TooltipUtils:AddDoubleLine(tt, "ilvl:", format("%.1f", cachedLevel))
+                    tt:Show()
+                end
+            end
+
+            if TOUT["SHOWPARTYXPBAR"] == false and xpBar then
+                if xpBar then
+                    xpBar:Hide()
+                end
+
+                return
+            end
+
+            if unitId and TooltipUtils:IsSafeUnit(unitId) and TooltipUtils:IsSafeUnit("player") and unitId == "player" and UnitExists("player") and TooltipUtils:PlyTab("player") then
+                TooltipUtils:AddXPBar(tt, "player")
+
+                return
+            end
+
+            for i = 1, 4 do
+                local unit = "party" .. i
+                if TooltipUtils:IsSafeUnit(unit) and TooltipUtils:IsSafeUnit(unitId) and UnitExists(unit) and UnitGUID(unit) == UnitGUID(unitId) and TooltipUtils:PlyTab(unit) then
+                    TooltipUtils:AddXPBar(tt, unit)
+
+                    return
+                end
+            end
+
+            if xpBar then
+                xpBar:Hide()
+            end
         end
-
-        return
-    end
-
-    TooltipUtils:PlyTab(unitId)
-    if TOUT["SHOWGUID"] then
-        TooltipUtils:AddDoubleLine(tt, "GUID", UnitGUID(unitId))
-    end
-
-    if TOUT["POLYMORPHABLE"] == true then
-        TooltipUtils:AddPoly(tt, unitId)
-    end
-
-    if TOUT["BANISHABLE"] == true then
-        TooltipUtils:AddBanishable(tt, unitId)
-    end
-
-    if TOUT["SHOWITEMLEVEL"] and unitId and not InCombatLockdown() and pcall(UnitExists, unitId) and UnitIsPlayer(unitId) and CanInspect(unitId) then
-        local guid = UnitGUID(unitId)
-        local cachedLevel = TooltipUtils:GetCachedItemLevel(guid)
-        if not cachedLevel and (InspectFrame == nil or not InspectFrame:IsShown()) and TooltipUtils:GetInspectCache(guid) == nil and lastInspect < GetTime() then
-            lastInspect = GetTime() + 2
-            TooltipUtils:SaveToInspectCache(guid)
-            lastInspectGUID = guid
-            NotifyInspect(unitId)
-        elseif cachedLevel then
-            TooltipUtils:AddDoubleLine(tt, "ilvl:", format("%.1f", cachedLevel))
-            tt:Show()
-        end
-    end
-
-    if TOUT["SHOWPARTYXPBAR"] == false and xpBar then
-        if xpBar then
-            xpBar:Hide()
-        end
-
-        return
-    end
-
-    if unitId and TooltipUtils:IsSafeUnit(unitId) and TooltipUtils:IsSafeUnit("player") and unitId == "player" and UnitExists("player") and TooltipUtils:PlyTab("player") then
-        TooltipUtils:AddXPBar(tt, "player")
-
-        return
-    end
-
-    for i = 1, 4 do
-        local unit = "party" .. i
-        if TooltipUtils:IsSafeUnit(unit) and TooltipUtils:IsSafeUnit(unitId) and UnitExists(unit) and UnitGUID(unit) == UnitGUID(unitId) and TooltipUtils:PlyTab(unit) then
-            TooltipUtils:AddXPBar(tt, unit)
-
-            return
-        end
-    end
-
-    if xpBar then
-        xpBar:Hide()
-    end
+    )
 end
 
 function TooltipUtils:SendAllSlots()
