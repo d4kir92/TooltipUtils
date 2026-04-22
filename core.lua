@@ -715,28 +715,32 @@ frame:SetScript(
             if not TOUT["SHOWITEMLEVEL"] then return end
             local cachedLevel = TooltipUtils:GetCachedItemLevel(guid)
             if cachedLevel then return end
-            local _, unit = GameTooltip:GetUnit()
-            if InCombatLockdown() then return end
-            if not pcall(UnitExists, unit) then return end
-            if unit and UnitExists(unit) and UnitGUID(unit) == guid then
-                if C_PaperDollInfo and C_PaperDollInfo.GetInspectItemLevel then
-                    local ilevel = C_PaperDollInfo.GetInspectItemLevel(unit)
-                    if ilevel and ilevel > 0 then
-                        TooltipUtils:SaveToItemLevelCache(guid, ilevel)
-                        TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%.1f", ilevel))
-                        GameTooltip:Show()
-                        lastInspectGUID = nil
-                    end
-                else
-                    local ilevel = TooltipUtils:GetInspectILvl(unit)
-                    if ilevel and ilevel > 0 then
-                        TooltipUtils:SaveToItemLevelCache(guid, ilevel)
-                        TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%.1f", ilevel))
-                        GameTooltip:Show()
-                        lastInspectGUID = nil
+            pcall(
+                function()
+                    local _, unit = GameTooltip:GetUnit()
+                    if InCombatLockdown() then return end
+                    if not pcall(UnitExists, unit) then return end
+                    if unit and UnitExists(unit) and UnitGUID(unit) == guid then
+                        if C_PaperDollInfo and C_PaperDollInfo.GetInspectItemLevel then
+                            local ilevel = C_PaperDollInfo.GetInspectItemLevel(unit)
+                            if ilevel and ilevel > 0 then
+                                TooltipUtils:SaveToItemLevelCache(guid, ilevel)
+                                TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%.1f", ilevel))
+                                GameTooltip:Show()
+                                lastInspectGUID = nil
+                            end
+                        else
+                            local ilevel = TooltipUtils:GetInspectILvl(unit)
+                            if ilevel and ilevel > 0 then
+                                TooltipUtils:SaveToItemLevelCache(guid, ilevel)
+                                TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%.1f", ilevel))
+                                GameTooltip:Show()
+                                lastInspectGUID = nil
+                            end
+                        end
                     end
                 end
-            end
+            )
         end
     end
 )
