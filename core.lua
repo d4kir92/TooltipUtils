@@ -465,7 +465,7 @@ function TooltipUtils:OnTooltipSetUnit(tt, data)
                     lastInspectGUID = guid
                     NotifyInspect(unitId)
                 elseif cachedLevel then
-                    TooltipUtils:AddDoubleLine(tt, "ilvl:", format("%.1f", cachedLevel))
+                    TooltipUtils:AddDoubleLine(tt, "ilvl:", format("%d", cachedLevel))
                     tt:Show()
                 end
             end
@@ -725,7 +725,7 @@ frame:SetScript(
                             local ilevel = C_PaperDollInfo.GetInspectItemLevel(unit)
                             if ilevel and ilevel > 0 then
                                 TooltipUtils:SaveToItemLevelCache(guid, ilevel)
-                                TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%.1f", ilevel))
+                                TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%d", ilevel))
                                 GameTooltip:Show()
                                 lastInspectGUID = nil
                             end
@@ -733,7 +733,7 @@ frame:SetScript(
                             local ilevel = TooltipUtils:GetInspectILvl(unit)
                             if ilevel and ilevel > 0 then
                                 TooltipUtils:SaveToItemLevelCache(guid, ilevel)
-                                TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%.1f", ilevel))
+                                TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%d", ilevel))
                                 GameTooltip:Show()
                                 lastInspectGUID = nil
                             end
