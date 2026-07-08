@@ -459,7 +459,7 @@ function TooltipUtils:OnTooltipSetUnit(tt, data)
             if TOUT["SHOWITEMLEVEL"] and unitId and not InCombatLockdown() and pcall(UnitExists, unitId) and UnitIsPlayer(unitId) and CanInspect(unitId) then
                 local guid = UnitGUID(unitId)
                 local cachedLevel = TooltipUtils:GetCachedItemLevel(guid)
-                if not cachedLevel and (InspectFrame == nil or not InspectFrame:IsShown()) and TooltipUtils:GetInspectCache(guid) == nil and lastInspect < GetTime() then
+                if not cachedLevel and (InspectFrame == nil or not InspectFrame:IsShown()) and TooltipUtils:GetInspectCache(guid) == nil and unitId and UnitExists(unitId) and UnitIsPlayer(unitId) and CanInspect(unitId) and lastInspect < GetTime() then
                     lastInspect = GetTime() + 2
                     TooltipUtils:SaveToInspectCache(guid)
                     lastInspectGUID = guid
