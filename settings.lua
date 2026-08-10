@@ -4,7 +4,7 @@ TooltipUtils:RegisterEvent(TOUTSetup, "PLAYER_LOGIN")
 TOUTSetup:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_LOGIN" then
         TOUT = TOUT or {}
-        TooltipUtils:SetVersion(132252, "0.1.57")
+        TooltipUtils:SetVersion(132252, "0.1.58")
         TooltipUtils:SetAddonOutput("TooltipUtils", 132252)
         TooltipUtils:AddSlash("tu", TooltipUtils.ToggleSettings)
         TooltipUtils:AddSlash("tooltiputils", TooltipUtils.ToggleSettings)
