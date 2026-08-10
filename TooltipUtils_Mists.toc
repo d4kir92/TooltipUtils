@@ -3,7 +3,15 @@
 ## Title: TooltipUtils |T132252:16:16:0:0|t by |cff55d2ffD4KiR |T132115:16:16:0:0|t
 ## Notes: An add-on that allows you to add features to tooltip, such as: xp-bar from party, compare items with party, etc.
 ## Notes-deDE: Ein Add-on, mit dem Sie Funktionen zum Tooltip hinzufügen können, z. B.: ep-bar von deiner gruppe, Gegenstände mit der Gruppe vergleichen
+## Notes-esES: Un complemento que te permite añadir funciones al tooltip, como: barra de experiencia del grupo, comparar objetos con el grupo, etc.
+## Notes-esMX: Un complemento que te permite añadir funciones al tooltip, como: barra de experiencia del grupo, comparar objetos con el grupo, etc.
+## Notes-frFR: Un module complémentaire qui vous permet d'ajouter des fonctionnalités à l'infobulle, telles que : barre d'XP du groupe, comparaison d'objets avec le groupe, etc.
+## Notes-itIT: Un add-on che ti permette di aggiungere funzioni al tooltip, come: barra esperienza del gruppo, confronto oggetti con il gruppo, ecc.
+## Notes-koKR: 파티 경험치 바, 파티와 아이템 비교 등 툴팁에 기능을 추가할 수 있는 애드온입니다.
+## Notes-ptBR: Um addon que permite adicionar recursos à dica de ferramenta, como: barra de xp do grupo, comparar itens com o grupo, etc.
 ## Notes-ruRU: Добавляет функции в подсказку, такие как: полоса опыта группы, сравнение предметов группы и т.д...
+## Notes-zhCN: 一个可以为提示框添加功能的插件,例如:队伍经验条、与队伍比较物品等。
+## Notes-zhTW: 一個可以為提示框新增功能的外掛,例如:隊伍經驗條、與隊伍比較物品等。
 ## Author: D4KiR |T132115:16:16:0:0|t
 ## Category: Development Tools
 ## Category-deDE: Entwicklungstools
