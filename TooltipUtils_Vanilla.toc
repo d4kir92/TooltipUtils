@@ -1,4 +1,4 @@
-## Interface: 11508
+## Interface: 11509
 ## Version: 0.1.57
 ## Title: TooltipUtils |T132252:16:16:0:0|t by |cff55d2ffD4KiR |T132115:16:16:0:0|t
 ## Notes: An add-on that allows you to add features to tooltip, such as: xp-bar from party, compare items with party, etc.
