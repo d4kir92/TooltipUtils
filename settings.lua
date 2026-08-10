@@ -1,40 +1,33 @@
 local _, TooltipUtils = ...
 local TOUTSetup = CreateFrame("FRAME", "TOUTSetup")
 TooltipUtils:RegisterEvent(TOUTSetup, "PLAYER_LOGIN")
-TOUTSetup:SetScript(
-    "OnEvent",
-    function(self, event, ...)
-        if event == "PLAYER_LOGIN" then
-            TOUT = TOUT or {}
-            TooltipUtils:SetVersion(132252, "0.1.57")
-            TooltipUtils:SetAddonOutput("TooltipUtils", 132252)
-            TooltipUtils:AddSlash("tu", TooltipUtils.ToggleSettings)
-            TooltipUtils:AddSlash("tooltiputils", TooltipUtils.ToggleSettings)
-            local mmbtn = nil
-            TooltipUtils:CreateMinimapButton(
-                {
-                    ["name"] = "TooltipUtils",
-                    ["icon"] = 132252,
-                    ["var"] = mmbtn,
-                    ["dbtab"] = TOUT,
-                    ["vTT"] = {{"TooltipUtils", "v" .. TooltipUtils:GetVersion()}, {TooltipUtils:Trans("LID_LEFTCLICK"), TooltipUtils:Trans("LID_OPENSETTINGS")}, {TooltipUtils:Trans("LID_RIGHTCLICK"), TooltipUtils:Trans("LID_HIDEMINIMAPBUTTON")}},
-                    ["funcL"] = function()
-                        TooltipUtils:ToggleSettings()
-                    end,
-                    ["funcR"] = function()
-                        TooltipUtils:SV(TOUT, "SHOWMINIMAPBUTTON", false)
-                        TooltipUtils:HideMMBtn("TooltipUtils")
-                        TooltipUtils:MSG("Minimap Button is now hidden.")
-                    end,
-                    ["dbkey"] = "SHOWMINIMAPBUTTON"
-                }
-            )
+TOUTSetup:SetScript("OnEvent", function(self, event, ...)
+    if event == "PLAYER_LOGIN" then
+        TOUT = TOUT or {}
+        TooltipUtils:SetVersion(132252, "0.1.57")
+        TooltipUtils:SetAddonOutput("TooltipUtils", 132252)
+        TooltipUtils:AddSlash("tu", TooltipUtils.ToggleSettings)
+        TooltipUtils:AddSlash("tooltiputils", TooltipUtils.ToggleSettings)
+        local mmbtn = nil
+        TooltipUtils:CreateMinimapButton({
+            ["name"] = "TooltipUtils",
+            ["icon"] = 132252,
+            ["var"] = mmbtn,
+            ["dbtab"] = TOUT,
+            ["vTT"] = {{"TooltipUtils", "v" .. TooltipUtils:GetVersion()}, {TooltipUtils:Trans("LID_LEFTCLICK"), TooltipUtils:Trans("LID_OPENSETTINGS")}, {TooltipUtils:Trans("LID_RIGHTCLICK"), TooltipUtils:Trans("LID_HIDEMINIMAPBUTTON")}},
+            ["funcL"] = function() TooltipUtils:ToggleSettings() end,
+            ["funcR"] = function()
+                TooltipUtils:SV(TOUT, "SHOWMINIMAPBUTTON", false)
+                TooltipUtils:HideMMBtn("TooltipUtils")
+                TooltipUtils:MSG("Minimap Button is now hidden.")
+            end,
+            ["dbkey"] = "SHOWMINIMAPBUTTON"
+        })
 
-            TooltipUtils:InitSettings()
-            TooltipUtils:Init()
-        end
+        TooltipUtils:InitSettings()
+        TooltipUtils:Init()
     end
-)
+end)
 
 local cu_settings = nil
 function TooltipUtils:ToggleSettings()
@@ -49,15 +42,13 @@ end
 
 function TooltipUtils:InitSettings()
     TOUT = TOUT or {}
-    cu_settings = TooltipUtils:CreateWindow(
-        {
-            ["name"] = "TooltipUtils",
-            ["pTab"] = {"CENTER"},
-            ["sw"] = 520,
-            ["sh"] = 520,
-            ["title"] = format("TooltipUtils v%s", TooltipUtils:GetVersion())
-        }
-    )
+    cu_settings = TooltipUtils:CreateWindow({
+        ["name"] = "TooltipUtils",
+        ["pTab"] = {"CENTER"},
+        ["sw"] = 520,
+        ["sh"] = 520,
+        ["title"] = format("TooltipUtils v%s", TooltipUtils:GetVersion())
+    })
 
     local x = 15
     local y = 10
@@ -66,17 +57,13 @@ function TooltipUtils:InitSettings()
     TooltipUtils:SetAppendParent(cu_settings)
     TooltipUtils:SetAppendTab(TOUT)
     TooltipUtils:AppendCategory("GENERAL")
-    TooltipUtils:AppendCheckbox(
-        "SHOWMINIMAPBUTTON",
-        TooltipUtils:GetWoWBuild() ~= "RETAIL",
-        function()
-            if TooltipUtils:GV(TOUT, "SHOWMINIMAPBUTTON", TooltipUtils:GetWoWBuild() ~= "RETAIL") then
-                TooltipUtils:ShowMMBtn("TooltipUtils")
-            else
-                TooltipUtils:HideMMBtn("TooltipUtils")
-            end
+    TooltipUtils:AppendCheckbox("SHOWMINIMAPBUTTON", TooltipUtils:GetWoWBuild() ~= "RETAIL", function()
+        if TooltipUtils:GV(TOUT, "SHOWMINIMAPBUTTON", TooltipUtils:GetWoWBuild() ~= "RETAIL") then
+            TooltipUtils:ShowMMBtn("TooltipUtils")
+        else
+            TooltipUtils:HideMMBtn("TooltipUtils")
         end
-    )
+    end)
 
     TooltipUtils:AppendCategory("TOOLTIP")
     TooltipUtils:AppendCheckbox("SHOWITEMLEVEL", true)

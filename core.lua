@@ -52,10 +52,7 @@ function TooltipUtils:SendMsg(typ, key, value, chatType, target)
     end
 
     local success = C_ChatInfo.SendAddonMessage(msgPrefix, message, chatType, target)
-    if not success then
-        TooltipUtils:INFO("SendMsg FAILED", chatType, message)
-    end
-
+    if not success then TooltipUtils:INFO("SendMsg FAILED", chatType, message) end
     return success
 end
 
@@ -68,27 +65,12 @@ function TooltipUtils:QueueThink(from)
         local msgData = queue[1]
         if TooltipUtils:SendMsg(msgData[1], msgData[2], msgData[3], msgData[4], msgData[5]) then
             tremove(queue, 1)
-            TooltipUtils:After(
-                0.9,
-                function()
-                    TooltipUtils:QueueThink("Success")
-                end, "QueueSuccess"
-            )
+            TooltipUtils:After(0.9, function() TooltipUtils:QueueThink("Success") end, "QueueSuccess")
         else
-            TooltipUtils:After(
-                1.8,
-                function()
-                    TooltipUtils:QueueThink("Failed")
-                end, "QueueFailed"
-            )
+            TooltipUtils:After(1.8, function() TooltipUtils:QueueThink("Failed") end, "QueueFailed")
         end
     else
-        TooltipUtils:After(
-            1.3,
-            function()
-                TooltipUtils:QueueThink("AFK")
-            end, "QueueAFK"
-        )
+        TooltipUtils:After(1.3, function() TooltipUtils:QueueThink("AFK") end, "QueueAFK")
     end
 end
 
@@ -103,13 +85,11 @@ function TooltipUtils:PlyTab(unitId)
     if string.find(guid, "Player", 1, true) == nil then return false end
     if unitId ~= "player" and UnitInParty(unitId) == false then return false end
     TOUT["units"][guid] = TOUT["units"][guid] or {}
-
     return true
 end
 
 function TooltipUtils:ItemLinkToItemString(itemLink)
     local pattern = "|H(item:.-)|h"
-
     return itemLink:match(pattern)
 end
 
@@ -122,10 +102,7 @@ function TooltipUtils:AddXPBar(tt, unitId)
         local cur = UnitXP(unitId)
         local max = UnitXPMax(unitId)
         if cur == 0 or max <= 0 then
-            if xpBar then
-                xpBar:Hide()
-            end
-
+            if xpBar then xpBar:Hide() end
             return
         end
 
@@ -174,11 +151,8 @@ function TooltipUtils:GetItemTooltipText(itemLink)
     for i = 1, tooltip:NumLines() do
         local left = _G["MyScanningTooltipTextLeft" .. i]
         local right = _G["MyScanningTooltipTextRight" .. i]
-        if left then
-            table.insert(lines, {left:GetText(), right:GetText()})
-        end
+        if left then table.insert(lines, {left:GetText(), right:GetText()}) end
     end
-
     return lines
 end
 
@@ -187,29 +161,14 @@ local comparers2 = {}
 function TooltipUtils:AddComparer(tab, i, itemLink, unitId)
     if itemLink == nil then return end
     local parent = GameTooltip
-    if GameTooltip:GetLeft() and ShoppingTooltip1:GetLeft() and GameTooltip:GetLeft() < ShoppingTooltip1:GetLeft() then
-        parent = ShoppingTooltip1
-    end
-
-    if i > 1 then
-        parent = tab[i - 1]
-    end
-
+    if GameTooltip:GetLeft() and ShoppingTooltip1:GetLeft() and GameTooltip:GetLeft() < ShoppingTooltip1:GetLeft() then parent = ShoppingTooltip1 end
+    if i > 1 then parent = tab[i - 1] end
     if tab[i] == nil then
         local name = "Comparer" .. i
-        if tab == comparers2 then
-            name = name .. "_2"
-        end
-
+        if tab == comparers2 then name = name .. "_2" end
         tab[i] = CreateFrame("GameTooltip", name, GameTooltip:GetParent(), "GameTooltipTemplate")
         local comparer = tab[i]
-        hooksecurefunc(
-            GameTooltip,
-            "Hide",
-            function()
-                comparer:Hide()
-            end
-        )
+        hooksecurefunc(GameTooltip, "Hide", function() comparer:Hide() end)
     end
 
     tab[i]:SetOwner(parent, "ANCHOR_NONE")
@@ -288,7 +247,6 @@ function TooltipUtils:GetBonusIDs(itemLink)
         table.insert(resultParts, parts[i] == "" and "0" or parts[i])
     end
     -- Wir geben die Kette mit Bindestrichen oder Kommas getrennt aus
-
     return table.concat(resultParts, ":")
 end
 
@@ -305,25 +263,13 @@ function TooltipUtils:OnTooltipSetItem(tt, data)
         local ItemLink = select(2, C_Item.GetItemInfo(itemLink)) or itemLink
         if ItemLink then
             local IconID = select(10, TooltipUtils:GetItemInfo(ItemLink))
-            if IconID and TOUT["SHOWICONID"] then
-                TooltipUtils:AddDoubleLine(tt, "IconID", IconID)
-            end
-
+            if IconID and TOUT["SHOWICONID"] then TooltipUtils:AddDoubleLine(tt, "IconID", IconID) end
             local ItemID = GetItemInfoFromHyperlink(ItemLink)
-            if ItemID and TOUT["SHOWITEMID"] then
-                TooltipUtils:AddDoubleLine(tt, "ItemID", ItemID)
-            end
-
+            if ItemID and TOUT["SHOWITEMID"] then TooltipUtils:AddDoubleLine(tt, "ItemID", ItemID) end
             local SpellID = select(2, C_Item.GetItemSpell(ItemLink))
-            if SpellID and TOUT["SHOWSPELLID"] then
-                TooltipUtils:AddDoubleLine(tt, "SpellID", SpellID)
-            end
-
+            if SpellID and TOUT["SHOWSPELLID"] then TooltipUtils:AddDoubleLine(tt, "SpellID", SpellID) end
             local bonusIDS = TooltipUtils:GetBonusIDs(itemLink)
-            if bonusIDS and TOUT["SHOWBONUSIDS"] then
-                TooltipUtils:AddDoubleLine(tt, "Bonus-IDs", bonusIDS)
-            end
-
+            if bonusIDS and TOUT["SHOWBONUSIDS"] then TooltipUtils:AddDoubleLine(tt, "Bonus-IDs", bonusIDS) end
             local slotId = nil
             for i = 0, 23 do
                 if GetInventoryItemLink("player", i) == itemLink then
@@ -332,10 +278,7 @@ function TooltipUtils:OnTooltipSetItem(tt, data)
                 end
             end
 
-            if slotId ~= nil and TOUT["SHOWSLOTID"] then
-                TooltipUtils:AddDoubleLine(tt, "SlotId", slotId)
-            end
-
+            if slotId ~= nil and TOUT["SHOWSLOTID"] then TooltipUtils:AddDoubleLine(tt, "SlotId", slotId) end
             local equipmentSlotName = select(9, C_Item.GetItemInfo(itemLink))
             if slotId == nil and equipmentSlotName then
                 if invToSlot[equipmentSlotName] == nil then
@@ -367,25 +310,18 @@ function TooltipUtils:OnTooltipSetItem(tt, data)
                 if IsShiftKeyDown() and TOUT["SHOWPARTYITEMS"] then
                     for i = 1, 4 do
                         local partyUnit = "party" .. i
-                        if DEBUG then
-                            partyUnit = "player"
-                        end
-
+                        if DEBUG then partyUnit = "player" end
                         if UnitExists(partyUnit) and TOUT["units"][UnitGUID(partyUnit)] then
                             local slots = TOUT["units"][UnitGUID(partyUnit)]["slots"]
                             if slots and itemLink then
                                 if slotId ~= nil and slots[slotId] then
                                     local slotLink = select(2, C_Item.GetItemInfo(slots[slotId]))
-                                    if slotLink then
-                                        TooltipUtils:AddComparer(comparers, i, slotLink, partyUnit)
-                                    end
+                                    if slotLink then TooltipUtils:AddComparer(comparers, i, slotLink, partyUnit) end
                                 end
 
                                 if slotId2 ~= nil and slots[slotId2] then
                                     local slotLink = select(2, C_Item.GetItemInfo(slots[slotId2]))
-                                    if slotLink then
-                                        TooltipUtils:AddComparer(comparers2, i, slotLink, partyUnit)
-                                    end
+                                    if slotLink then TooltipUtils:AddComparer(comparers2, i, slotLink, partyUnit) end
                                 end
                             end
                         end
@@ -415,89 +351,60 @@ function TooltipUtils:OnTooltipSetSpell(tt, data)
 
     if spellID then
         local IconID = select(3, TooltipUtils:GetSpellInfo(spellID))
-        if IconID and TOUT["SHOWICONID"] then
-            TooltipUtils:AddDoubleLine(tt, "IconID", IconID)
-        end
-
+        if IconID and TOUT["SHOWICONID"] then TooltipUtils:AddDoubleLine(tt, "IconID", IconID) end
         local SpellID = select(7, TooltipUtils:GetSpellInfo(spellID))
-        if SpellID and TOUT["SHOWSPELLID"] then
-            TooltipUtils:AddDoubleLine(tt, "SpellID", SpellID)
-        end
+        if SpellID and TOUT["SHOWSPELLID"] then TooltipUtils:AddDoubleLine(tt, "SpellID", SpellID) end
     end
 end
 
 function TooltipUtils:OnTooltipSetUnit(tt, data)
     if tt == nil then return end
     local unitId = nil
-    pcall(
-        function()
-            if tt.GetUnit then
-                unitId = select(2, tt:GetUnit())
-            end
+    pcall(function()
+        if tt.GetUnit then unitId = select(2, tt:GetUnit()) end
+        if unitId == nil then
+            if xpBar then xpBar:Hide() end
+            return
+        end
 
-            if unitId == nil then
-                if xpBar then
-                    xpBar:Hide()
-                end
-
-                return
-            end
-
-            TooltipUtils:PlyTab(unitId)
-            if TOUT["SHOWGUID"] then
-                TooltipUtils:AddDoubleLine(tt, "GUID", UnitGUID(unitId))
-            end
-
-            if TOUT["POLYMORPHABLE"] == true then
-                TooltipUtils:AddPoly(tt, unitId)
-            end
-
-            if TOUT["BANISHABLE"] == true then
-                TooltipUtils:AddBanishable(tt, unitId)
-            end
-
-            if TOUT["SHOWITEMLEVEL"] and unitId and not InCombatLockdown() and pcall(UnitExists, unitId) and UnitIsPlayer(unitId) and CanInspect(unitId) then
-                local guid = UnitGUID(unitId)
-                local cachedLevel = TooltipUtils:GetCachedItemLevel(guid)
-                if not cachedLevel and (InspectFrame == nil or not InspectFrame:IsShown()) and TooltipUtils:GetInspectCache(guid) == nil and unitId and UnitExists(unitId) and UnitIsPlayer(unitId) and CanInspect(unitId) and lastInspect < GetTime() then
-                    lastInspect = GetTime() + 2
-                    TooltipUtils:SaveToInspectCache(guid)
-                    lastInspectGUID = guid
-                    NotifyInspect(unitId)
-                elseif cachedLevel then
-                    TooltipUtils:AddDoubleLine(tt, "ilvl:", format("%d", cachedLevel))
-                    tt:Show()
-                end
-            end
-
-            if TOUT["SHOWPARTYXPBAR"] == false and xpBar then
-                if xpBar then
-                    xpBar:Hide()
-                end
-
-                return
-            end
-
-            if unitId and TooltipUtils:IsSafeUnit(unitId) and TooltipUtils:IsSafeUnit("player") and unitId == "player" and UnitExists("player") and TooltipUtils:PlyTab("player") then
-                TooltipUtils:AddXPBar(tt, "player")
-
-                return
-            end
-
-            for i = 1, 4 do
-                local unit = "party" .. i
-                if TooltipUtils:IsSafeUnit(unit) and TooltipUtils:IsSafeUnit(unitId) and UnitExists(unit) and UnitGUID(unit) == UnitGUID(unitId) and TooltipUtils:PlyTab(unit) then
-                    TooltipUtils:AddXPBar(tt, unit)
-
-                    return
-                end
-            end
-
-            if xpBar then
-                xpBar:Hide()
+        TooltipUtils:PlyTab(unitId)
+        if TOUT["SHOWGUID"] then TooltipUtils:AddDoubleLine(tt, "GUID", UnitGUID(unitId)) end
+        if TOUT["POLYMORPHABLE"] == true then TooltipUtils:AddPoly(tt, unitId) end
+        if TOUT["BANISHABLE"] == true then TooltipUtils:AddBanishable(tt, unitId) end
+        if TOUT["SHOWITEMLEVEL"] and unitId and not InCombatLockdown() and pcall(UnitExists, unitId) and UnitIsPlayer(unitId) and CanInspect(unitId) then
+            local guid = UnitGUID(unitId)
+            local cachedLevel = TooltipUtils:GetCachedItemLevel(guid)
+            if not cachedLevel and (InspectFrame == nil or not InspectFrame:IsShown()) and TooltipUtils:GetInspectCache(guid) == nil and unitId and UnitExists(unitId) and UnitIsPlayer(unitId) and CanInspect(unitId) and lastInspect < GetTime() then
+                lastInspect = GetTime() + 2
+                TooltipUtils:SaveToInspectCache(guid)
+                lastInspectGUID = guid
+                NotifyInspect(unitId)
+            elseif cachedLevel then
+                TooltipUtils:AddDoubleLine(tt, "ilvl:", format("%d", cachedLevel))
+                tt:Show()
             end
         end
-    )
+
+        if TOUT["SHOWPARTYXPBAR"] == false and xpBar then
+            if xpBar then xpBar:Hide() end
+            return
+        end
+
+        if unitId and TooltipUtils:IsSafeUnit(unitId) and TooltipUtils:IsSafeUnit("player") and unitId == "player" and UnitExists("player") and TooltipUtils:PlyTab("player") then
+            TooltipUtils:AddXPBar(tt, "player")
+            return
+        end
+
+        for i = 1, 4 do
+            local unit = "party" .. i
+            if TooltipUtils:IsSafeUnit(unit) and TooltipUtils:IsSafeUnit(unitId) and UnitExists(unit) and UnitGUID(unit) == UnitGUID(unitId) and TooltipUtils:PlyTab(unit) then
+                TooltipUtils:AddXPBar(tt, unit)
+                return
+            end
+        end
+
+        if xpBar then xpBar:Hide() end
+    end)
 end
 
 function TooltipUtils:SendAllSlots()
@@ -515,7 +422,6 @@ function TooltipUtils:Init()
     local successfulRequest = C_ChatInfo.RegisterAddonMessagePrefix(msgPrefix)
     if not successfulRequest then
         TooltipUtils:MSG("[Init] PREFIX FAILED TO ADD")
-
         return
     end
 
@@ -532,85 +438,38 @@ function TooltipUtils:Init()
     end
 
     if TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall and TooltipUtils:GetWoWBuild() ~= "TBC" then
-        TooltipDataProcessor.AddTooltipPostCall(
-            Enum.TooltipDataType.Item,
-            function(tt, data)
-                TooltipUtils:OnTooltipSetItem(tt, data)
-            end
-        )
-
-        TooltipDataProcessor.AddTooltipPostCall(
-            Enum.TooltipDataType.Spell,
-            function(tt, data)
-                TooltipUtils:OnTooltipSetSpell(tt, data)
-            end
-        )
-
-        TooltipDataProcessor.AddTooltipPostCall(
-            Enum.TooltipDataType.Unit,
-            function(tt, data)
-                TooltipUtils:OnTooltipSetUnit(tt, data)
-            end
-        )
-
-        TooltipDataProcessor.AddTooltipPostCall(
-            Enum.TooltipDataType.UnitAura,
-            function(tt, data)
-                TooltipUtils:OnTooltipSetSpell(tt, data)
-            end
-        )
+        TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, function(tt, data) TooltipUtils:OnTooltipSetItem(tt, data) end)
+        TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Spell, function(tt, data) TooltipUtils:OnTooltipSetSpell(tt, data) end)
+        TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, function(tt, data) TooltipUtils:OnTooltipSetUnit(tt, data) end)
+        TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.UnitAura, function(tt, data) TooltipUtils:OnTooltipSetSpell(tt, data) end)
     else
         for _, frame in pairs(tooltips) do
             if frame then
                 if frame.HasScript and frame:HasScript("OnTooltipSetItem") then
-                    frame:HookScript(
-                        "OnTooltipSetItem",
-                        function(tt, ...)
-                            if xpBar then
-                                xpBar:Hide()
-                            end
-
-                            TooltipUtils:OnTooltipSetItem(tt, ...)
-                        end
-                    )
+                    frame:HookScript("OnTooltipSetItem", function(tt, ...)
+                        if xpBar then xpBar:Hide() end
+                        TooltipUtils:OnTooltipSetItem(tt, ...)
+                    end)
                 end
 
                 if frame.HasScript and frame:HasScript("OnTooltipSetSpell") then
-                    frame:HookScript(
-                        "OnTooltipSetSpell",
-                        function(tt, ...)
-                            if xpBar then
-                                xpBar:Hide()
-                            end
-
-                            TooltipUtils:OnTooltipSetSpell(tt, ...)
-                        end
-                    )
+                    frame:HookScript("OnTooltipSetSpell", function(tt, ...)
+                        if xpBar then xpBar:Hide() end
+                        TooltipUtils:OnTooltipSetSpell(tt, ...)
+                    end)
                 end
 
-                if frame.HasScript and frame:HasScript("OnTooltipSetUnit") then
-                    frame:HookScript(
-                        "OnTooltipSetUnit",
-                        function(tt, ...)
-                            TooltipUtils:OnTooltipSetUnit(tt, ...)
-                        end
-                    )
-                end
-
+                if frame.HasScript and frame:HasScript("OnTooltipSetUnit") then frame:HookScript("OnTooltipSetUnit", function(tt, ...) TooltipUtils:OnTooltipSetUnit(tt, ...) end) end
                 if frame == GameTooltip then
-                    hooksecurefunc(
-                        frame,
-                        "SetAction",
-                        function(tt, slot)
-                            if tt == nil then return end
-                            if slot == nil then return end
-                            local actionType, MacroID = GetActionInfo(slot)
-                            if actionType == "macro" and MacroID and TOUT["SHOWMACROID"] then
-                                TooltipUtils:AddDoubleLine(tt, "MacroID", MacroID)
-                                tt:Show()
-                            end
+                    hooksecurefunc(frame, "SetAction", function(tt, slot)
+                        if tt == nil then return end
+                        if slot == nil then return end
+                        local actionType, MacroID = GetActionInfo(slot)
+                        if actionType == "macro" and MacroID and TOUT["SHOWMACROID"] then
+                            TooltipUtils:AddDoubleLine(tt, "MacroID", MacroID)
+                            tt:Show()
                         end
-                    )
+                    end)
                 end
             end
         end
@@ -618,129 +477,101 @@ function TooltipUtils:Init()
 
     local equip = CreateFrame("Frame")
     TooltipUtils:RegisterEvent(equip, "PLAYER_EQUIPMENT_CHANGED")
-    TooltipUtils:OnEvent(
-        equip,
-        function(sel, event, slot, empty)
-            TOUT = TOUT or {}
-            TOUT["slots"] = TOUT["slots"] or {}
-            TOUT["units"] = TOUT["units"] or {}
-            TOUT["units"][UnitGUID("player")] = TOUT["units"][UnitGUID("player")] or {}
-            TOUT["units"][UnitGUID("player")]["slots"] = TOUT["units"][UnitGUID("player")]["slots"] or {}
-            local itemLink = GetInventoryItemLink("player", slot)
-            if itemLink then
-                itemLink = TooltipUtils:ItemLinkToItemString(itemLink)
-                TOUT["units"][UnitGUID("player")]["slots"][slot] = itemLink
-                TOUT["slots"][slot] = itemLink
-            else
-                TOUT["units"][UnitGUID("player")]["slots"][slot] = ""
-                TOUT["slots"][slot] = ""
-            end
+    TooltipUtils:OnEvent(equip, function(sel, event, slot, empty)
+        TOUT = TOUT or {}
+        TOUT["slots"] = TOUT["slots"] or {}
+        TOUT["units"] = TOUT["units"] or {}
+        TOUT["units"][UnitGUID("player")] = TOUT["units"][UnitGUID("player")] or {}
+        TOUT["units"][UnitGUID("player")]["slots"] = TOUT["units"][UnitGUID("player")]["slots"] or {}
+        local itemLink = GetInventoryItemLink("player", slot)
+        if itemLink then
+            itemLink = TooltipUtils:ItemLinkToItemString(itemLink)
+            TOUT["units"][UnitGUID("player")]["slots"][slot] = itemLink
+            TOUT["slots"][slot] = itemLink
+        else
+            TOUT["units"][UnitGUID("player")]["slots"][slot] = ""
+            TOUT["slots"][slot] = ""
+        end
 
-            if IsInGroup() then
-                TooltipUtils:QueueMsg("units/slots", slot, TOUT["slots"][slot], "PARTY")
-            end
-        end, "equip"
-    )
+        if IsInGroup() then TooltipUtils:QueueMsg("units/slots", slot, TOUT["slots"][slot], "PARTY") end
+    end, "equip")
 
     local roster = CreateFrame("Frame")
     TooltipUtils:RegisterEvent(roster, "GROUP_ROSTER_UPDATE")
-    TooltipUtils:OnEvent(
-        roster,
-        function(sel, event, ...)
-            TooltipUtils:SendAllSlots()
-        end, "roster"
-    )
-
+    TooltipUtils:OnEvent(roster, function(sel, event, ...) TooltipUtils:SendAllSlots() end, "roster")
     local receiver = CreateFrame("Frame")
     TooltipUtils:RegisterEvent(receiver, "CHAT_MSG_ADDON")
-    TooltipUtils:OnEvent(
-        receiver,
-        function(sel, event, prefix, message, chatTyp, sender, target, ...)
-            if prefix == msgPrefix then
-                local guid = UnitGUID(target)
-                if guid then
-                    local typ, key, value = strsplit(";", message)
-                    if DEBUG then
-                        TooltipUtils:DEB("RECEIVE", "guid", guid, "typ", typ, "key", key, "value", value)
-                    end
-
-                    TOUT["units"] = TOUT["units"] or {}
-                    TOUT["units"][guid] = TOUT["units"][guid] or {}
-                    if typ == "units" then
-                        TOUT["units"][guid][key] = value
-                    elseif typ == "units/slots" then
-                        if key ~= "all" then
-                            TOUT["units"][guid]["slots"] = TOUT["units"][guid]["slots"] or {}
-                            TOUT["units"][guid]["slots"][tonumber(key)] = tonumber(value)
-                        end
+    TooltipUtils:OnEvent(receiver, function(sel, event, prefix, message, chatTyp, sender, target, ...)
+        if prefix == msgPrefix then
+            local guid = UnitGUID(target)
+            if guid then
+                local typ, key, value = strsplit(";", message)
+                if DEBUG then TooltipUtils:DEB("RECEIVE", "guid", guid, "typ", typ, "key", key, "value", value) end
+                TOUT["units"] = TOUT["units"] or {}
+                TOUT["units"][guid] = TOUT["units"][guid] or {}
+                if typ == "units" then
+                    TOUT["units"][guid][key] = value
+                elseif typ == "units/slots" then
+                    if key ~= "all" then
+                        TOUT["units"][guid]["slots"] = TOUT["units"][guid]["slots"] or {}
+                        TOUT["units"][guid]["slots"][tonumber(key)] = tonumber(value)
                     end
                 end
             end
-        end, "receiver"
-    )
+        end
+    end, "receiver")
 
     local maxxp = UnitXPMax("player")
     local xpgain = CreateFrame("Frame")
     TooltipUtils:RegisterEvent(xpgain, "PLAYER_XP_UPDATE")
-    TooltipUtils:OnEvent(
-        xpgain,
-        function(sel, event, ...)
-            if maxxp ~= UnitXPMax("player") then
-                maxxp = UnitXPMax("player")
-                TooltipUtils:QueueMsg("units", "maxxp", UnitXPMax("player"), "PARTY")
-            end
-
-            TooltipUtils:QueueMsg("units", "curxp", UnitXP("player"), "PARTY")
-        end, "xpgain"
-    )
-
-    TooltipUtils:After(
-        2,
-        function()
-            if not DEBUG and UnitInParty(unitId) == false then return false end
+    TooltipUtils:OnEvent(xpgain, function(sel, event, ...)
+        if maxxp ~= UnitXPMax("player") then
+            maxxp = UnitXPMax("player")
             TooltipUtils:QueueMsg("units", "maxxp", UnitXPMax("player"), "PARTY")
-            TooltipUtils:QueueMsg("units", "curxp", UnitXP("player"), "PARTY")
-            TooltipUtils:SendAllSlots()
-            TooltipUtils:QueueThink("Init")
-        end, "INIT"
-    )
+        end
+
+        TooltipUtils:QueueMsg("units", "curxp", UnitXP("player"), "PARTY")
+    end, "xpgain")
+
+    TooltipUtils:After(2, function()
+        if not DEBUG and UnitInParty(unitId) == false then return false end
+        TooltipUtils:QueueMsg("units", "maxxp", UnitXPMax("player"), "PARTY")
+        TooltipUtils:QueueMsg("units", "curxp", UnitXP("player"), "PARTY")
+        TooltipUtils:SendAllSlots()
+        TooltipUtils:QueueThink("Init")
+    end, "INIT")
 end
 
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("INSPECT_READY")
-frame:SetScript(
-    "OnEvent",
-    function(self, event, guid)
-        if event == "INSPECT_READY" and lastInspectGUID and guid == lastInspectGUID then
-            if not TOUT["SHOWITEMLEVEL"] then return end
-            local cachedLevel = TooltipUtils:GetCachedItemLevel(guid)
-            if cachedLevel then return end
-            pcall(
-                function()
-                    local _, unit = GameTooltip:GetUnit()
-                    if InCombatLockdown() then return end
-                    if not pcall(UnitExists, unit) then return end
-                    if unit and UnitExists(unit) and UnitGUID(unit) == guid then
-                        if C_PaperDollInfo and C_PaperDollInfo.GetInspectItemLevel then
-                            local ilevel = C_PaperDollInfo.GetInspectItemLevel(unit)
-                            if ilevel and ilevel > 0 then
-                                TooltipUtils:SaveToItemLevelCache(guid, ilevel)
-                                TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%d", ilevel))
-                                GameTooltip:Show()
-                                lastInspectGUID = nil
-                            end
-                        else
-                            local ilevel = TooltipUtils:GetInspectILvl(unit)
-                            if ilevel and ilevel > 0 then
-                                TooltipUtils:SaveToItemLevelCache(guid, ilevel)
-                                TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%d", ilevel))
-                                GameTooltip:Show()
-                                lastInspectGUID = nil
-                            end
-                        end
+frame:SetScript("OnEvent", function(self, event, guid)
+    if event == "INSPECT_READY" and lastInspectGUID and guid == lastInspectGUID then
+        if not TOUT["SHOWITEMLEVEL"] then return end
+        local cachedLevel = TooltipUtils:GetCachedItemLevel(guid)
+        if cachedLevel then return end
+        pcall(function()
+            local _, unit = GameTooltip:GetUnit()
+            if InCombatLockdown() then return end
+            if not pcall(UnitExists, unit) then return end
+            if unit and UnitExists(unit) and UnitGUID(unit) == guid then
+                if C_PaperDollInfo and C_PaperDollInfo.GetInspectItemLevel then
+                    local ilevel = C_PaperDollInfo.GetInspectItemLevel(unit)
+                    if ilevel and ilevel > 0 then
+                        TooltipUtils:SaveToItemLevelCache(guid, ilevel)
+                        TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%d", ilevel))
+                        GameTooltip:Show()
+                        lastInspectGUID = nil
+                    end
+                else
+                    local ilevel = TooltipUtils:GetInspectILvl(unit)
+                    if ilevel and ilevel > 0 then
+                        TooltipUtils:SaveToItemLevelCache(guid, ilevel)
+                        TooltipUtils:AddDoubleLine(GameTooltip, "ilvl:", format("%d", ilevel))
+                        GameTooltip:Show()
+                        lastInspectGUID = nil
                     end
                 end
-            )
-        end
+            end
+        end)
     end
-)
+end)
