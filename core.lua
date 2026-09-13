@@ -251,7 +251,7 @@ function TooltipUtils:GetBonusIDs(itemLink)
 end
 
 function TooltipUtils:OnTooltipSetItem(tt, data)
-    if tt == nil then return end
+    if tt == nil or tt:IsForbidden() then return end
     local itemLink = nil
     if data and data.id then
         itemLink = select(2, TooltipUtils:GetItemInfo(data.id))
@@ -341,7 +341,7 @@ function TooltipUtils:OnTooltipSetItem(tt, data)
 end
 
 function TooltipUtils:OnTooltipSetSpell(tt, data)
-    if tt == nil then return end
+    if tt == nil or tt:IsForbidden() then return end
     local spellID = nil
     if data and data.id then
         spellID = data.id
@@ -358,7 +358,7 @@ function TooltipUtils:OnTooltipSetSpell(tt, data)
 end
 
 function TooltipUtils:OnTooltipSetUnit(tt, data)
-    if tt == nil then return end
+    if tt == nil or tt:IsForbidden() then return end
     local unitId = nil
     pcall(function()
         if tt.GetUnit then unitId = select(2, tt:GetUnit()) end
