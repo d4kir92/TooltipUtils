@@ -1,6 +1,6 @@
 local _, TooltipUtils = ...
 local ICON = 132252
-local VERSION = "0.2.0"
+local VERSION = "0.2.1"
 local DEFAULT_WIDTH = 520
 local DEFAULT_HEIGHT = 520
 local tu_settings = nil
