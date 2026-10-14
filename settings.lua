@@ -1,6 +1,5 @@
 local _, TooltipUtils = ...
-local ICON = 132252
-local VERSION = "0.2.5"
+local ICON = TooltipUtils:GetAddonIcon()
 local DEFAULT_WIDTH = 520
 local DEFAULT_HEIGHT = 520
 local tu_settings = nil
@@ -135,8 +134,8 @@ TOUTSetup:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_LOGIN" then
         TOUT = TOUT or {}
         ApplyDefaults()
-        TooltipUtils:SetVersion(ICON, VERSION)
-        TooltipUtils:SetAddonOutput("TooltipUtils", ICON)
+        TooltipUtils:SetVersion()
+        TooltipUtils:SetAddonOutput()
         TooltipUtils:AddSlash("tu", TooltipUtils.ToggleSettings)
         TooltipUtils:AddSlash("tooltiputils", TooltipUtils.ToggleSettings)
         TooltipUtils:CreateMinimapButton({

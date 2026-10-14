@@ -1,6 +1,6 @@
 ## Interface: 38002, 30403
-## Version: 0.2.5
-## Title: TooltipUtils |T132252:16:16:0:0|t by |cff55d2ffD4KiR |T132115:16:16:0:0|t
+## Version: 0.2.6
+## Title: TooltipUtils by |cff55d2ffD4KiR |T132115:16:16:0:0|t
 ## Notes: An add-on that allows you to add features to tooltip, such as: xp-bar from party, compare items with party, etc.
 ## Notes-deDE: Ein Add-on, mit dem Sie Funktionen zum Tooltip hinzufügen können, z. B.: ep-bar von deiner gruppe, Gegenstände mit der Gruppe vergleichen
 ## Notes-esES: Un complemento que te permite añadir funciones al tooltip, como: barra de experiencia del grupo, comparar objetos con el grupo, etc.
