@@ -99,11 +99,13 @@ local xpBar = nil
 function TooltipUtils:AddXPBar(tt, unitId)
     if TooltipUtils:PlyTab(unitId) then
         local guid = UnitGUID(unitId)
-        TOUT["units"][guid]["curxp"] = 0
-        TOUT["units"][guid]["maxxp"] = 1
-        local cur = UnitXP(unitId)
-        local max = UnitXPMax(unitId)
-        if cur == 0 or max <= 0 then
+        local cur = TOUT["units"][guid]["curxp"]
+        local max = TOUT["units"][guid]["maxxp"]
+        if UnitIsUnit(unitId, "player") then
+            cur = UnitXP("player")
+            max = UnitXPMax("player")
+        end
+        if type(cur) ~= "number" or type(max) ~= "number" or max <= 0 then
             if xpBar then xpBar:Hide() end
             return
         end
@@ -361,6 +363,7 @@ end
 
 function TooltipUtils:OnTooltipSetUnit(tt, data)
     if tt == nil or tt:IsForbidden() then return end
+    if xpBar then xpBar:Hide() end
     local unitId = nil
     pcall(function()
         if tt.GetUnit then unitId = select(2, tt:GetUnit()) end
@@ -436,6 +439,14 @@ function TooltipUtils:Init()
         else
             TOUT["units"][UnitGUID("player")]["slots"][i] = ""
             TOUT["slots"][i] = ""
+        end
+    end
+
+    for _, frame in pairs(tooltips) do
+        if frame and not frame:IsForbidden() then
+            frame:HookScript("OnTooltipCleared", function(tt)
+                if xpBar and xpBar:GetParent() == tt then xpBar:Hide() end
+            end)
         end
     end
 
